@@ -1,4 +1,4 @@
-class moveableObject{
+class MoveableObject{
     x = 120;
     y = 400;
     img;
@@ -6,5 +6,8 @@ class moveableObject{
     moveRight(){
         console.log("Move right");
         
+    }
+
+    moveLeft() {
     }
 }
