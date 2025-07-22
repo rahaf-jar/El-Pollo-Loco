@@ -2,7 +2,6 @@ class Cloud extends MoveableObject {
   y = 20;
   height = 250;
   width = 750;
-  speed = 0.15;
 
   constructor(imagePath) {
     super();
@@ -13,8 +12,6 @@ class Cloud extends MoveableObject {
   }
 
   animate() {
-    setInterval(() => {
-      this.x -= 0.20;
-    }, 1000 / 60);
+    this.moveLeft();
   }
 }
