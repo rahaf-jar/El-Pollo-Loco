@@ -11,6 +11,13 @@ class MoveableObject {
   speedY = 0;
   acceleration = 2.5;
 
+  playAnimation(images) {
+    let i = this.currentImage % images.length;
+    let path = images[i];
+    this.img = this.imageCache[path];
+    this.currentImage++;
+  }
+
   applyGravity() {
     setInterval(() => {
       if (this.isAboveGround()) {
@@ -20,7 +27,7 @@ class MoveableObject {
     }, 1000 / 25);
   }
 
-  isAboveGround(){
+  isAboveGround() {
     return this.y < 170;
   }
 

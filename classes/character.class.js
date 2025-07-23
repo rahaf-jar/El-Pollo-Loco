@@ -11,12 +11,25 @@ class Character extends MoveableObject {
     "img/2_character_pepe/2_walk/W-25.png",
     "img/2_character_pepe/2_walk/W-26.png",
   ];
+
+  pepe_jumping = [
+    "img/2_character_pepe/3_jump/J-31.png",
+    "img/2_character_pepe/3_jump/J-32.png",
+    "img/2_character_pepe/3_jump/J-33.png",
+    "img/2_character_pepe/3_jump/J-34.png",
+    "img/2_character_pepe/3_jump/J-35.png",
+    "img/2_character_pepe/3_jump/J-36.png",
+    "img/2_character_pepe/3_jump/J-37.png",
+    "img/2_character_pepe/3_jump/J-38.png",
+    "img/2_character_pepe/3_jump/J-39.png",
+  ]
   world;
 
   constructor() {
     super();
     this.loadImage("img/2_character_pepe/2_walk/W-21.png");
     this.loadImages(this.pepe_walking);
+    this.loadImages(this.pepe_jumping);
     this.applyGravity();
     this.animate();
   }
@@ -37,8 +50,7 @@ class Character extends MoveableObject {
 
     setInterval(() => {
       if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-        this.img = this.imageCache[this.pepe_walking[this.currentImage]];
-        this.currentImage = (this.currentImage + 1) % this.pepe_walking.length;
+        this.playAnimation(this.pepe_walking);
       }
     }, 50);
   }
