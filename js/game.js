@@ -44,3 +44,9 @@ window.addEventListener("keyup", (event) => {
     keyboard.SPACE = false;
   }
 });
+
+window.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') {
+    character.jump();
+  }
+});

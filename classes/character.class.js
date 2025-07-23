@@ -52,7 +52,7 @@ class Character extends MoveableObject {
   ];
 
   world;
-  lastMoveTime = Date.now(); 
+  lastMoveTime = Date.now();
 
   constructor() {
     super();
@@ -81,22 +81,35 @@ class Character extends MoveableObject {
         isMoving = true;
       }
 
+      if (this.world.keyboard.SPACE) {
+        this.jump();
+      }
+
       if (this.isAboveGround()) {
         isMoving = true;
       }
 
       if (isMoving) {
-        this.lastMoveTime = Date.now(); 
+        this.lastMoveTime = Date.now();
       }
 
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
 
     setInterval(() => {
-      if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+      if (
+        (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) &&
+        !this.isAboveGround()
+      ) {
         this.playAnimation(this.pepe_walking);
       }
     }, 100);
+
+    setInterval(() => {
+      if (this.isAboveGround()) {
+        this.playAnimation(this.pepe_jumping);
+      }
+    }, 350);
 
     setInterval(() => {
       let timePassed = Date.now() - this.lastMoveTime;
