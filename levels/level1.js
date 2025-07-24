@@ -15,4 +15,3 @@ const level1 = new Level(
 
   20000 
 );
-ƒ

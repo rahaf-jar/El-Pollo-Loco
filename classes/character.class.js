@@ -51,6 +51,12 @@ class Character extends MoveableObject {
     "img/2_character_pepe/1_idle/long_idle/I-20.png",
   ];
 
+  pepe_hurt = [
+    "img/2_character_pepe/4_hurt/H-41.png",
+    "img/2_character_pepe/4_hurt/H-42.png",
+    "img/2_character_pepe/4_hurt/H-43.png",
+  ];
+
   world;
   lastMoveTime = Date.now();
 
@@ -61,8 +67,11 @@ class Character extends MoveableObject {
     this.loadImages(this.pepe_walking);
     this.loadImages(this.pepe_jumping);
     this.loadImages(this.pepe_super_idle);
+    this.loadImages(this.pepe_hurt);
     this.applyGravity();
     this.animate();
+    this.hurtAnimationPlaying = false;
+    this.canBeHurt = true;
   }
 
   animate() {
@@ -97,7 +106,11 @@ class Character extends MoveableObject {
     }, 1000 / 60);
 
     setInterval(() => {
-      if (
+      if (this.hurtAnimationPlaying) {
+        this.playAnimation(this.pepe_hurt);
+      } else if (this.isAboveGround()) {
+        this.playAnimation(this.pepe_jumping);
+      } else if (
         (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) &&
         !this.isAboveGround()
       ) {
@@ -106,19 +119,14 @@ class Character extends MoveableObject {
     }, 100);
 
     setInterval(() => {
-      if (this.isAboveGround()) {
-        this.playAnimation(this.pepe_jumping);
-      }
-    }, 350);
-
-    setInterval(() => {
       let timePassed = Date.now() - this.lastMoveTime;
 
       if (
         !this.world.keyboard.RIGHT &&
         !this.world.keyboard.LEFT &&
         !this.isAboveGround() &&
-        timePassed < 10000
+        timePassed < 10000 &&
+        !this.hurtAnimationPlaying
       ) {
         this.playAnimation(this.pepe_idle);
       }
@@ -131,7 +139,8 @@ class Character extends MoveableObject {
         !this.world.keyboard.RIGHT &&
         !this.world.keyboard.LEFT &&
         !this.isAboveGround() &&
-        timePassed >= 10000
+        timePassed >= 10000 &&
+        !this.hurtAnimationPlaying 
       ) {
         this.playAnimation(this.pepe_super_idle);
       }

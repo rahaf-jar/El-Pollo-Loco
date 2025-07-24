@@ -38,10 +38,6 @@ class MoveableObject {
     this.img.src = path;
   }
 
-  /**
-   *
-   * @param {Array} arr - ['path1', 'path2', ...]
-   */
   loadImages(arr) {
     arr.forEach((path) => {
       let img = new Image();
@@ -64,5 +60,25 @@ class MoveableObject {
     if (!this.isAboveGround()) {
       this.speedY = 30;
     }
+  }
+
+  isColliding(obj) {
+    return (
+      this.x + this.width > obj.x &&
+      this.x < obj.x + obj.width &&
+      this.y + this.height > obj.y &&
+      this.y < obj.y + obj.height
+    );
+  }
+
+  isFallingOn(obj) {
+    const isFalling = this.speedY <= 5;
+    const feetNearEnemyTop =
+      this.y + this.height >= obj.y - obj.height && 
+      this.y + this.height <= obj.y + obj.height;
+    const horizontallyAligned =
+      this.x + this.width > obj.x && this.x < obj.x + obj.width;
+
+    return isFalling && feetNearEnemyTop && horizontallyAligned;
   }
 }

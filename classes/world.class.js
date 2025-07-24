@@ -12,6 +12,7 @@ class World {
     this.keyboard = keyboard;
     this.draw();
     this.setWorld();
+    this.checkCollisions();
   }
 
   setWorld() {
@@ -44,17 +45,66 @@ class World {
     if (mo.img instanceof HTMLImageElement && mo.img.complete) {
       if (mo.otherDirection) {
         this.ctx.save();
-
         this.ctx.translate(mo.x + mo.width, mo.y);
-
         this.ctx.scale(-1, 1);
-
         this.ctx.drawImage(mo.img, 0, 0, mo.width, mo.height);
-
         this.ctx.restore();
       } else {
         this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
       }
     }
+  }
+
+  checkCollisions() {
+    setInterval(() => {
+      this.level.enemies.forEach((enemy) => {
+        if (this.character.isColliding(enemy)) {
+          console.log("Collision detected!");
+          console.log(
+            `Pepe y+height: ${
+              this.character.y + this.character.height
+            }, enemy y: ${enemy.y}, speedY: ${this.character.speedY}`
+          );
+
+          if (this.character.isFallingOn(enemy)) {
+            console.log("Pepe is falling on enemy! Killing enemy.");
+            this.character.speedY = 15;
+            this.killEnemy(enemy);
+          } else if (this.character.canBeHurt && !enemy.dead) {
+            console.log("Pepe is hurt by enemy!");
+            this.character.canBeHurt = false;
+            this.character.hurtAnimationPlaying = true;
+
+            setTimeout(() => {
+              this.character.hurtAnimationPlaying = false;
+            }, 1000);
+
+            setTimeout(() => {
+              this.character.canBeHurt = true;
+            }, 1200);
+          }
+        }
+      });
+    }, 100);
+  }
+
+  killEnemy(enemy) {
+    console.log("Killing enemy...");
+    enemy.dead = true;
+    enemy.currentImage = 0;
+    enemy.speed = 0;
+
+    let deathInterval = setInterval(() => {
+      enemy.playAnimation(enemy.chicken_dead);
+    }, 150);
+
+    setTimeout(() => {
+      clearInterval(deathInterval);
+      const index = this.level.enemies.indexOf(enemy);
+      if (index > -1) {
+        this.level.enemies.splice(index, 1);
+        console.log("Enemy removed from level.");
+      }
+    }, 800);
   }
 }
