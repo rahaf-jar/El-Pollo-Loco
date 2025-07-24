@@ -62,7 +62,7 @@ class MoveableObject {
 
   jump() {
     if (!this.isAboveGround()) {
-      this.speedY = 30; 
+      this.speedY = 30;
     }
   }
 }
