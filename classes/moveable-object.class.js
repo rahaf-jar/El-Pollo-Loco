@@ -1,11 +1,4 @@
-class MoveableObject {
-  x = 120;
-  y = 250;
-  img;
-  height = 200;
-  width = 100;
-  imageCache = {};
-  currentImage = 0;
+class MoveableObject extends DrawAbleObject {
   speed = 0.15;
   otherDirection = false;
   speedY = 0;
@@ -36,19 +29,6 @@ class MoveableObject {
 
   isAboveGround() {
     return this.y < 170;
-  }
-
-  loadImage(path) {
-    this.img = new Image();
-    this.img.src = path;
-  }
-
-  loadImages(arr) {
-    arr.forEach((path) => {
-      let img = new Image();
-      img.src = path;
-      this.imageCache[path] = img;
-    });
   }
 
   moveRight() {
