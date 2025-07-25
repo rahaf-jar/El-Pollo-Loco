@@ -55,36 +55,51 @@ class World {
     }
   }
 
+  isJumpingOnEnemy(enemy) {
+    return this.character.isFallingOn(enemy);
+  }
+
+  removeEnemy(enemy) {
+    console.log("Pepe jumped on enemy and kills it!");
+    this.character.speedY = 15;
+    this.killEnemy(enemy);
+  }
+
+  canPepeGetHurt(enemy) {
+    return (
+      this.character.canBeHurt &&
+      !enemy.dead &&
+      this.character.isSideCollisionWith(enemy) &&
+      !this.character.isJumping()
+    );
+  }
+
+  hurtPepe() {
+    console.log("Pepe got hurt by enemy!");
+    this.character.canBeHurt = false;
+    this.character.hurtAnimationPlaying = true;
+
+    setTimeout(() => {
+      this.character.hurtAnimationPlaying = false;
+      console.log("Hurt animation finished.");
+    }, 1000);
+
+    setTimeout(() => {
+      this.character.canBeHurt = true;
+      console.log("Pepe can get hurt again.");
+    }, 1200);
+  }
+
   checkCollisions() {
     setInterval(() => {
       this.level.enemies.forEach((enemy) => {
         if (this.character.isColliding(enemy)) {
-          console.log("Collision detected!");
+          console.log("Collision happened!");
 
-          if (this.character.isFallingOn(enemy)) {
-            console.log("Pepe is falling on enemy! Killing enemy.");
-            this.character.speedY = 15;
-            this.killEnemy(enemy);
-          } else if (
-            this.character.canBeHurt &&
-            !enemy.dead &&
-            this.character.isSideCollisionWith(enemy) &&
-            !this.character.isJumping()
-          ) {
-            console.log("Pepe is hurt from the side!");
-
-            this.character.canBeHurt = false;
-            this.character.hurtAnimationPlaying = true;
-
-            setTimeout(() => {
-              this.character.hurtAnimationPlaying = false;
-              console.log("Hurt animation ended.");
-            }, 1000);
-
-            setTimeout(() => {
-              this.character.canBeHurt = true;
-              console.log("Pepe can be hurt again.");
-            }, 1200);
+          if (this.isJumpingOnEnemy(enemy)) {
+            this.removeEnemy(enemy);
+          } else if (this.canPepeGetHurt(enemy)) {
+            this.hurtPepe();
           }
         }
       });
