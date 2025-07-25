@@ -1,9 +1,53 @@
+@font-face {
+    font-family: Barriecito-Regular;
+    src: url(./fonts/Barriecito-Regular.ttf);
+}
+
+html{
+    font-family: Barriecito-Regular;
+}
+
+h1{
+    font-size: 46px;
+}
+
 body {
+    margin: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(./img/5_background/gameBackground.jpg);
+    background-size: cover;
+    background-position: center;
+    filter: blur(1px); 
+    z-index: -1; 
+}
+
+.background::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: hsla(0, 0%, 0%, 0.227);
 }
 
 canvas {
     background-color: black;
+    border: 2px solid hsla(0, 0%, 0%, 0.218);
+    border-radius: 8px;
+    z-index: 1;
+    box-shadow: 0 5px 30px hsla(0, 0%, 0%, 0.6); 
 }
