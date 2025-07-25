@@ -62,6 +62,10 @@ class MoveableObject {
     }
   }
 
+  isJumping() {
+    return this.isAboveGround() && this.speedY > 0;
+  }
+
   isColliding(obj) {
     return (
       this.x + this.width > obj.x &&
@@ -71,10 +75,19 @@ class MoveableObject {
     );
   }
 
+  isSideCollisionWith(obj) {
+    const horizontalOverlap =
+      this.x + this.width > obj.x && this.x < obj.x + obj.width;
+    const verticalBodyTouch =
+      this.y + this.height > obj.y + 10 && this.y < obj.y + obj.height - 10;
+
+    return horizontalOverlap && verticalBodyTouch;
+  }
+
   isFallingOn(obj) {
     const isFalling = this.speedY <= 5;
     const feetNearEnemyTop =
-      this.y + this.height >= obj.y - obj.height && 
+      this.y + this.height >= obj.y - obj.height &&
       this.y + this.height <= obj.y + obj.height;
     const horizontallyAligned =
       this.x + this.width > obj.x && this.x < obj.x + obj.width;

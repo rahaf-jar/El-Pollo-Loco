@@ -60,27 +60,30 @@ class World {
       this.level.enemies.forEach((enemy) => {
         if (this.character.isColliding(enemy)) {
           console.log("Collision detected!");
-          console.log(
-            `Pepe y+height: ${
-              this.character.y + this.character.height
-            }, enemy y: ${enemy.y}, speedY: ${this.character.speedY}`
-          );
 
           if (this.character.isFallingOn(enemy)) {
             console.log("Pepe is falling on enemy! Killing enemy.");
             this.character.speedY = 15;
             this.killEnemy(enemy);
-          } else if (this.character.canBeHurt && !enemy.dead) {
-            console.log("Pepe is hurt by enemy!");
+          } else if (
+            this.character.canBeHurt &&
+            !enemy.dead &&
+            this.character.isSideCollisionWith(enemy) &&
+            !this.character.isJumping()
+          ) {
+            console.log("Pepe is hurt from the side!");
+
             this.character.canBeHurt = false;
             this.character.hurtAnimationPlaying = true;
 
             setTimeout(() => {
               this.character.hurtAnimationPlaying = false;
+              console.log("Hurt animation ended.");
             }, 1000);
 
             setTimeout(() => {
               this.character.canBeHurt = true;
+              console.log("Pepe can be hurt again.");
             }, 1200);
           }
         }
