@@ -12,6 +12,11 @@ class MoveableObject {
   acceleration = 2.5;
 
   playAnimation(images) {
+    if (!images || images.length === 0) {
+      console.warn("No images passed to playAnimation");
+      return;
+    }
+
     let i = this.currentImage % images.length;
     let path = images[i];
     this.img = this.imageCache[path];
