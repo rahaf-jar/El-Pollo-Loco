@@ -13,17 +13,26 @@ class Endboss extends MoveableObject {
     "img/4_enemie_boss_chicken/2_alert/G12.png",
   ];
 
+  endboss_walking = [
+    "img/4_enemie_boss_chicken/1_walk/G1.png",
+    "img/4_enemie_boss_chicken/1_walk/G2.png",
+    "img/4_enemie_boss_chicken/1_walk/G3.png",
+    "img/4_enemie_boss_chicken/1_walk/G4.png",
+  ];
+
   constructor() {
     super();
     this.loadImage(this.endboss_alert[0]);
     this.loadImages(this.endboss_alert);
+    this.loadImages(this.endboss_walking);
     this.x = 2500;
     this.animate();
   }
 
   animate() {
+    this.moveLeft(); 
     setInterval(() => {
-      this.playAnimation(this.endboss_alert);
+      this.playAnimation(this.endboss_walking);
     }, 200);
   }
 }
