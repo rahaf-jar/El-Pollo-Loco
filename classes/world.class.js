@@ -5,6 +5,7 @@ class World {
   ctx;
   keyboard;
   camera_x = 0;
+  statusBar = new StatusBar();
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -23,8 +24,12 @@ class World {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.ctx.translate(this.camera_x, 0);
-
     this.addObjectsToMap(this.level.backgroundObjects);
+
+    this.ctx.translate(-this.camera_x, 0);
+    this.addToMap(this.statusBar);
+    this.ctx.translate(this.camera_x, 0);
+
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.clouds);
@@ -79,6 +84,13 @@ class World {
     this.character.canBeHurt = false;
     this.character.hurtAnimationPlaying = true;
 
+    this.character.percentage -= 20;
+    this.statusBar.setPercentage(this.character.percentage);
+
+    if (this.character.percentage <= 0) {
+      this.characterDies();
+    }
+
     setTimeout(() => {
       this.character.hurtAnimationPlaying = false;
       console.log("Hurt animation finished.");
@@ -88,6 +100,12 @@ class World {
       this.character.canBeHurt = true;
       console.log("Pepe can get hurt again.");
     }, 1200);
+  }
+
+  characterDies() {
+    console.log("Pepe has died.");
+    this.character.speed = 0;
+    this.character.dead = true;
   }
 
   checkCollisions() {

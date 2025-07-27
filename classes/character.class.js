@@ -73,6 +73,7 @@ class Character extends MoveableObject {
     this.animate();
     this.hurtAnimationPlaying = false;
     this.canBeHurt = true;
+    this.percentage = 100;
   }
 
   animate() {
