@@ -23,6 +23,8 @@ class World {
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+    if (this.gameEnded) return; 
+
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
 
@@ -30,7 +32,7 @@ class World {
     this.addToMap(this.statusBar);
     this.ctx.translate(this.camera_x, 0);
 
-    this.addToMap(this.character);
+    if (this.character) this.addToMap(this.character); 
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.clouds);
 
@@ -80,6 +82,7 @@ class World {
   }
 
   hurtPepe() {
+    if (!this.character) return; 
     console.log("Pepe got hurt by enemy!");
     this.character.canBeHurt = false;
     this.character.hurtAnimationPlaying = true;
@@ -92,11 +95,13 @@ class World {
     }
 
     setTimeout(() => {
+      if (!this.character) return; 
       this.character.hurtAnimationPlaying = false;
       console.log("Hurt animation finished.");
     }, 1000);
 
     setTimeout(() => {
+      if (!this.character) return;
       this.character.canBeHurt = true;
       console.log("Pepe can get hurt again.");
     }, 1200);
@@ -104,12 +109,17 @@ class World {
 
   characterDies() {
     console.log("Pepe has died.");
-    this.character.speed = 0;
-    this.character.dead = true;
+    this.character.isDead = true;
+    setTimeout(() => {
+      this.character = null;
+      this.endGame();
+    }, 1500);
   }
 
   checkCollisions() {
     setInterval(() => {
+      if (!this.character) return; 
+
       this.level.enemies.forEach((enemy) => {
         if (this.character.isColliding(enemy)) {
           console.log("Collision happened!");
@@ -142,5 +152,18 @@ class World {
         console.log("Enemy removed from level.");
       }
     }, 800);
+  }
+
+  endGame() {
+    console.log("GAME OVER");
+    this.gameEnded = true;
+
+    this.ctx.font = "60px Arial";
+    this.ctx.fillStyle = "red";
+    this.ctx.fillText(
+      "GAME OVER",
+      this.canvas.width / 2 - 160,
+      this.canvas.height / 2
+    );
   }
 }

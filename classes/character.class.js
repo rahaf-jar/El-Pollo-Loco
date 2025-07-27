@@ -3,7 +3,7 @@ class Character extends MoveableObject {
   width = 130;
   y = 70;
   speed = 10;
-  idleTimer = 0; 
+  idleTimer = 0;
 
   pepe_walking = [
     "img/2_character_pepe/2_walk/W-21.png",
@@ -58,6 +58,16 @@ class Character extends MoveableObject {
     "img/2_character_pepe/4_hurt/H-43.png",
   ];
 
+  pepe_dead = [
+    "img/2_character_pepe/5_dead/D-51.png",
+    "img/2_character_pepe/5_dead/D-52.png",
+    "img/2_character_pepe/5_dead/D-53.png",
+    "img/2_character_pepe/5_dead/D-54.png",
+    "img/2_character_pepe/5_dead/D-55.png",
+    "img/2_character_pepe/5_dead/D-56.png",
+    "img/2_character_pepe/5_dead/D-57.png",
+  ];
+
   world;
   lastMoveTime = Date.now();
 
@@ -69,14 +79,22 @@ class Character extends MoveableObject {
     this.loadImages(this.pepe_jumping);
     this.loadImages(this.pepe_long_idle);
     this.loadImages(this.pepe_hurt);
+    this.loadImages(this.pepe_dead);
     this.applyGravity();
     this.animate();
     this.hurtAnimationPlaying = false;
     this.canBeHurt = true;
     this.percentage = 100;
+    this.isDead = false;
   }
 
   animate() {
+    if (this.isDead) {
+      setInterval(() => {
+        this.playAnimation(this.pepe_dead);
+      }, 100);
+      return;
+    }
     setInterval(() => {
       let isMoving = false;
 
@@ -117,6 +135,8 @@ class Character extends MoveableObject {
         !this.isAboveGround()
       ) {
         this.playAnimation(this.pepe_walking);
+      } else if (this.percentage <= 0) {
+        this.playAnimation(this.pepe_dead);
       }
     }, 100);
 
