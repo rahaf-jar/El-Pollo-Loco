@@ -6,6 +6,7 @@ class World {
   keyboard;
   camera_x = 0;
   statusBar = new StatusBar();
+  coinBar = new CoinBar();
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -23,18 +24,19 @@ class World {
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    if (this.gameEnded) return; 
+    if (this.gameEnded) return;
 
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
 
-    this.ctx.translate(-this.camera_x, 0);
-    this.addToMap(this.statusBar);
-    this.ctx.translate(this.camera_x, 0);
-
-    if (this.character) this.addToMap(this.character); 
+    if (this.character) this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.clouds);
+
+    this.ctx.translate(-this.camera_x, 0);
+    this.addToMap(this.statusBar);
+    this.addToMap(this.coinBar);
+    this.ctx.translate(this.camera_x, 0);
 
     this.ctx.translate(-this.camera_x, 0);
 
@@ -82,7 +84,7 @@ class World {
   }
 
   hurtPepe() {
-    if (!this.character) return; 
+    if (!this.character) return;
     console.log("Pepe got hurt by enemy!");
     this.character.canBeHurt = false;
     this.character.hurtAnimationPlaying = true;
@@ -95,7 +97,7 @@ class World {
     }
 
     setTimeout(() => {
-      if (!this.character) return; 
+      if (!this.character) return;
       this.character.hurtAnimationPlaying = false;
       console.log("Hurt animation finished.");
     }, 1000);
@@ -118,7 +120,7 @@ class World {
 
   checkCollisions() {
     setInterval(() => {
-      if (!this.character) return; 
+      if (!this.character) return;
 
       this.level.enemies.forEach((enemy) => {
         if (this.character.isColliding(enemy)) {
