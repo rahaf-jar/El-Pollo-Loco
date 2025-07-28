@@ -13,6 +13,10 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+
+    if (!this.level.coins) console.error("Coins not loaded!");
+    if (!this.level.bottles) console.error("Bottles not loaded!");
+
     this.draw();
     this.setWorld();
     this.checkCollisions();
@@ -32,6 +36,8 @@ class World {
 
     if (this.character) this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.level.coins);
+    this.addObjectsToMap(this.level.bottles);
     this.addObjectsToMap(this.level.clouds);
 
     this.ctx.translate(-this.camera_x, 0);
@@ -126,13 +132,27 @@ class World {
 
       this.level.enemies.forEach((enemy) => {
         if (this.character.isColliding(enemy)) {
-          console.log("Collision happened!");
-
           if (this.isJumpingOnEnemy(enemy)) {
             this.removeEnemy(enemy);
           } else if (this.canPepeGetHurt(enemy)) {
             this.hurtPepe();
           }
+        }
+      });
+
+      this.level.coins.forEach((coin, index) => {
+        if (this.character.isColliding(coin)) {
+          this.level.coins.splice(index, 1); 
+          this.coinBar.setCoinsCount(this.coinBar.coins + 10); 
+          console.log("Coin collected!");
+        }
+      });
+
+      this.level.bottles.forEach((bottle, index) => {
+        if (this.character.isColliding(bottle)) {
+          this.level.bottles.splice(index, 1); 
+          this.bottleBar.setBottlesAmount(this.bottleBar.bottles + 10); 
+          console.log("Bottle collected!");
         }
       });
     }, 100);

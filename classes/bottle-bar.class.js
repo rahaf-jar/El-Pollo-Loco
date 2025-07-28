@@ -21,7 +21,7 @@ class BottleBar extends DrawAbleObject {
   }
 
   setBottlesAmount(bottles) {
-    this.coins = Math.max(0, bottles); 
+    this.bottles = Math.max(0, bottles); 
     let path = this.images[this.resolveImageIndex()];
     this.img = this.imageCache[path];
   }
