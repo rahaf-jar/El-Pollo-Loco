@@ -16,11 +16,11 @@ class CoinBar extends DrawAbleObject {
     this.x = 40;
     this.y = 45;
     this.width = 200;
-    this.height = 60;
-    this.setPercentage(100);
+    this.height = 50;
+    this.setCoinsCount(100);
   }
 
-  setPercentage(coins) {
+  setCoinsCount(coins) {
     this.coins = Math.max(0, coins); 
     let path = this.images[this.resolveImageIndex()];
     this.img = this.imageCache[path];
