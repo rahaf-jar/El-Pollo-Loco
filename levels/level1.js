@@ -16,8 +16,8 @@ function generateCoins() {
     const lineStartX = baseX + 300 + Math.random() * 200;
     const y = 250 + Math.floor(Math.random() * 40);
 
-    for (let j = 0; j < 5; j++) {
-      coins.push(new Coin(lineStartX + j * 50, y));
+    for (let i = 0; i < 5; i++) {
+      coins.push(new Coin(lineStartX + i * 50, y));
     }
   }
 
@@ -29,7 +29,7 @@ function generateBottles() {
   const bottleCount = 15;
 
   for (let i = 0; i < bottleCount; i++) {
-    const x = 800 + Math.floor(Math.random() * 19000); 
+    const x = 800 + Math.floor(Math.random() * 10000); 
     bottles.push(new Bottle(x));
   }
 
@@ -74,6 +74,6 @@ const level1 = new Level(
 
   generateCoins(),
   generateBottles(),
-  generateBackgroundObjects(-2000, 20000),
-  20000
+  generateBackgroundObjects(-2000, 12000),
+  11500
 );
