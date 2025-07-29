@@ -8,7 +8,7 @@ class CoinBar extends DrawAbleObject {
     "img/7_statusbars/1_statusbar/1_statusbar_coin/green/100.png",
   ];
 
-  coins = 100;
+  coins = 0;
 
   constructor() {
     super();
@@ -28,17 +28,17 @@ class CoinBar extends DrawAbleObject {
  
   resolveImageIndex() {
     if (this.coins == 100) {
-      return 5;
-    } else if (this.coins > 80) {
-      return 4;
-    } else if (this.coins > 60) {
-      return 3;
-    } else if (this.coins > 40) {
-      return 2;
-    } else if (this.coins > 20) {
-      return 1;
-    } else {
       return 0;
+    } else if (this.coins > 80) {
+      return 1;
+    } else if (this.coins > 60) {
+      return 2;
+    } else if (this.coins > 40) {
+      return 3;
+    } else if (this.coins > 20) {
+      return 4;
+    } else {
+      return 5;
     }
   }
 }
