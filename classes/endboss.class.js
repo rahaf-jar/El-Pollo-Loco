@@ -33,6 +33,7 @@ class Endboss extends MoveableObject {
     this.loadImages(this.endboss_walking);
     this.x = 11000;
     this.animate();
+    this.canBeHurt = true;
   }
 
   animate() {

@@ -1,11 +1,13 @@
 class World {
   character = new Character();
+  endBoss = new Endboss();
   level = level1;
   canvas;
   ctx;
   keyboard;
   camera_x = 0;
   statusBar = new StatusBar();
+  endBossStatusBar = new EndBossStatusBar();
   coinBar = new CoinBar();
   bottleBar = new BottleBar();
   collectedBottles = 0;
@@ -49,6 +51,7 @@ class World {
 
     this.ctx.translate(-this.camera_x, 0);
     this.addToMap(this.statusBar);
+    this.addToMap(this.endBossStatusBar);
     this.addToMap(this.coinBar);
     this.addToMap(this.bottleBar);
     this.ctx.translate(this.camera_x, 0);
@@ -123,6 +126,8 @@ class World {
       console.log("Pepe can get hurt again.");
     }, 1200);
   }
+
+  
 
   characterDies() {
     console.log("Pepe has died.");
