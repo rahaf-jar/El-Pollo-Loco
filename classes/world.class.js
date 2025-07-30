@@ -8,6 +8,7 @@ class World {
   statusBar = new StatusBar();
   coinBar = new CoinBar();
   bottleBar = new BottleBar();
+  collectedBottles = 0;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -20,6 +21,12 @@ class World {
     this.draw();
     this.setWorld();
     this.checkCollisions();
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "x" || e.key === "X") {
+        this.throwBottle();
+      }
+    });
   }
 
   setWorld() {
@@ -142,17 +149,18 @@ class World {
 
       this.level.coins.forEach((coin, index) => {
         if (this.character.isColliding(coin)) {
-          this.level.coins.splice(index, 1); 
-          this.coinBar.setCoinsCount(this.coinBar.coins + 10); 
+          this.level.coins.splice(index, 1);
+          this.coinBar.setCoinsCount(this.coinBar.coins + 20);
           console.log("Coin collected!");
         }
       });
 
       this.level.bottles.forEach((bottle, index) => {
         if (this.character.isColliding(bottle)) {
-          this.level.bottles.splice(index, 1); 
-          this.bottleBar.setBottlesAmount(this.bottleBar.bottles + 10); 
-          console.log("Bottle collected!");
+          this.level.bottles.splice(index, 1);
+          this.collectedBottles++;
+          this.bottleBar.setBottlesAmount(this.collectedBottles);
+          console.log("Bottle collected! Total: " + this.collectedBottles);
         }
       });
     }, 100);
@@ -189,5 +197,20 @@ class World {
       this.canvas.width / 2 - 160,
       this.canvas.height / 2
     );
+  }
+
+  throwBottle() {
+    if (this.collectedBottles > 0) {
+      const bottle = new ThrowableBottle(
+        this.character.x + 50,
+        this.character.y
+      );
+      this.level.bottles.push(bottle);
+      this.collectedBottles--;
+      this.bottleBar.setBottlesAmount(this.collectedBottles);
+      console.log("Bottle thrown! Remaining: " + this.collectedBottles);
+    } else {
+      console.log("No bottles left!");
+    }
   }
 }
