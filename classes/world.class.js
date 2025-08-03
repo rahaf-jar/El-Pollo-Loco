@@ -127,8 +127,6 @@ class World {
     }, 1200);
   }
 
-  
-
   characterDies() {
     console.log("Pepe has died.");
     this.character.isDead = true;
@@ -195,13 +193,20 @@ class World {
     console.log("GAME OVER");
     this.gameEnded = true;
 
-    this.ctx.font = "60px Arial";
-    this.ctx.fillStyle = "red";
-    this.ctx.fillText(
-      "GAME OVER",
-      this.canvas.width / 2 - 160,
-      this.canvas.height / 2
-    );
+    const gameOverImage = new Image();
+    gameOverImage.src = "./img/10_You_won_you_lost/oh_no_you_lost.png"; 
+
+    gameOverImage.onload = () => {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+      this.ctx.drawImage(
+        gameOverImage,
+        0,
+        0,
+        this.canvas.width,
+        this.canvas.height
+      );
+    };
   }
 
   throwBottle() {

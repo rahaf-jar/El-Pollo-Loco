@@ -50,7 +50,7 @@ class MoveableObject extends DrawAbleObject {
   isJumping() {
     return this.isAboveGround() && this.speedY > 0;
   }
-  
+
   isColliding(obj) {
     const paddingTop = 40;
     const paddingBottom = 20;
