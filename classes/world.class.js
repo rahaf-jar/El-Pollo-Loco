@@ -13,10 +13,17 @@ class World {
   collectedBottles = 0;
 
   soundIcon = new Image();
+  soundX = 670;
+  soundY = 10;
+  soundWidth = 20;
+  soundHeight = 20;
   isMuted = false;
-  soundIconX = 580;
-  soundIconY = 450;
-  soundIconSize = 20;
+
+  fullscreenIcon = new Image();
+  fullscreenX = 670;
+  fullscreenY = 450;
+  fullscreenWidth = 20;
+  fullscreenHeight = 20;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -34,10 +41,12 @@ class World {
       if (e.key === "x" || e.key === "X") {
         this.throwBottle();
       }
-      if (!this.bgMusic) {
-        this.playBackgroundMusic();
-      }
     });
+
+    this.soundIcon.src = "img/on_canvas_options/unmute.png";
+    this.fullscreenIcon.src = "img/on_canvas_options/open-full-screen.png";
+
+    this.registerClickEvent();
 
     this.canvas.addEventListener("click", () => {
       if (!this.bgMusic) {
@@ -45,28 +54,47 @@ class World {
       }
     });
 
-    this.soundIcon.src = "img/on_canvas_options/unmute.png";
-    this.registerClickEvent();
+    this.originalWidth = canvas.width;
+    this.originalHeight = canvas.height;
+
+    window.addEventListener("resize", () => {
+      if (document.fullscreenElement) {
+        this.resizeFullscreen();
+      }
+    });
   }
 
   playBackgroundMusic() {
     this.bgMusic = new Audio("audio/game-music.mp3");
     this.bgMusic.loop = true;
     this.bgMusic.volume = 0.5;
-    this.bgMusic.play();
+    this.bgMusic.play().catch(() => {});
   }
 
   registerClickEvent() {
-    this.canvas.addEventListener("click", (event) => {
+    this.canvas.addEventListener("click", (e) => {
       const rect = this.canvas.getBoundingClientRect();
-      const mouseX = event.clientX - rect.left;
-      const mouseY = event.clientY - rect.top;
+      let clickX = e.clientX - rect.left;
+      let clickY = e.clientY - rect.top;
+
+      const scaleX = this.canvas.width / rect.width;
+      const scaleY = this.canvas.height / rect.height;
+
+      clickX *= scaleX;
+      clickY *= scaleY;
 
       if (
-        mouseX >= this.soundIconX &&
-        mouseX <= this.soundIconX + this.soundIconSize &&
-        mouseY >= this.soundIconY &&
-        mouseY <= this.soundIconY + this.soundIconSize
+        clickX >= this.fullscreenX &&
+        clickX <= this.fullscreenX + this.fullscreenWidth &&
+        clickY >= this.fullscreenY &&
+        clickY <= this.fullscreenY + this.fullscreenHeight
+      ) {
+        this.toggleFullscreen();
+      } else if (
+        clickX >= this.soundX &&
+        clickX <= this.soundX + this.soundWidth &&
+        clickY >= this.soundY &&
+        clickY <= this.soundY + this.soundHeight
       ) {
         this.toggleSound();
       }
@@ -74,14 +102,63 @@ class World {
   }
 
   toggleSound() {
-    if (this.isMuted) {
-      this.bgMusic.muted = false;
-      this.soundIcon.src = "img/on_canvas_options/unmute.png";
-    } else {
-      this.bgMusic.muted = true;
-      this.soundIcon.src = "img/on_canvas_options/mute.png";
-    }
+    if (!this.bgMusic) return;
     this.isMuted = !this.isMuted;
+    this.bgMusic.muted = this.isMuted;
+    this.soundIcon.src = this.isMuted
+      ? "img/on_canvas_options/mute.png"
+      : "img/on_canvas_options/unmute.png";
+  }
+
+  toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      this.canvas
+        .requestFullscreen()
+        .then(() => {
+          this.canvas.width = window.innerWidth;
+          this.canvas.height = window.innerHeight;
+          this.scaleX = this.canvas.width / this.originalWidth;
+          this.scaleY = this.canvas.height / this.originalHeight;
+
+          this.fullscreenX = this.canvas.width - 30;
+          this.fullscreenY = this.canvas.height - 30;
+          this.soundX = this.canvas.width - 30;
+          this.soundY = 10;
+
+          this.fullscreenIcon.src =
+            "img/on_canvas_options/close-full-screen.png";
+        })
+        .catch(() => {});
+    } else {
+      document
+        .exitFullscreen()
+        .then(() => {
+          this.canvas.width = this.originalWidth;
+          this.canvas.height = this.originalHeight;
+          this.scaleX = 1;
+          this.scaleY = 1;
+
+          this.fullscreenX = this.canvas.width - 30;
+          this.fullscreenY = this.canvas.height - 30;
+          this.soundX = this.canvas.width - 30;
+          this.soundY = 10;
+
+          this.fullscreenIcon.src =
+            "img/on_canvas_options/open-full-screen.png";
+        })
+        .catch(() => {});
+    }
+  }
+
+  resizeFullscreen() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    this.scaleX = this.canvas.width / this.originalWidth;
+    this.scaleY = this.canvas.height / this.originalHeight;
+    this.fullscreenX = this.canvas.width - 30;
+    this.fullscreenY = this.canvas.height - 30;
+    this.soundX = this.canvas.width - 30;
+    this.soundY = 10;
   }
 
   setWorld() {
@@ -92,6 +169,9 @@ class World {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     if (this.gameEnded) return;
+
+    this.ctx.save();
+    this.ctx.scale(this.scaleX, this.scaleY);
 
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
@@ -108,20 +188,25 @@ class World {
     this.addToMap(this.coinBar);
     this.addToMap(this.bottleBar);
 
-    // Draw sound icon fixed on screen
+    this.ctx.restore();
+
     this.ctx.drawImage(
       this.soundIcon,
-      this.soundIconX,
-      this.soundIconY,
-      this.soundIconSize,
-      this.soundIconSize
+      this.soundX,
+      this.soundY,
+      this.soundWidth,
+      this.soundHeight
     );
 
-    this.ctx.translate(this.camera_x, 0);
-    this.ctx.translate(-this.camera_x, 0);
+    this.ctx.drawImage(
+      this.fullscreenIcon,
+      this.fullscreenX,
+      this.fullscreenY,
+      this.fullscreenWidth,
+      this.fullscreenHeight
+    );
 
-    let self = this;
-    requestAnimationFrame(() => self.draw());
+    requestAnimationFrame(() => this.draw());
   }
 
   addObjectsToMap(objects) {
@@ -149,7 +234,6 @@ class World {
   }
 
   removeEnemy(enemy) {
-    console.log("Pepe jumped on enemy and kills it!");
     this.character.speedY = 15;
     this.killEnemy(enemy);
   }
@@ -165,7 +249,6 @@ class World {
 
   hurtPepe() {
     if (!this.character) return;
-    console.log("Pepe got hurt by enemy!");
     this.character.canBeHurt = false;
     this.character.hurtAnimationPlaying = true;
 
@@ -179,18 +262,15 @@ class World {
     setTimeout(() => {
       if (!this.character) return;
       this.character.hurtAnimationPlaying = false;
-      console.log("Hurt animation finished.");
     }, 1000);
 
     setTimeout(() => {
       if (!this.character) return;
       this.character.canBeHurt = true;
-      console.log("Pepe can get hurt again.");
     }, 1200);
   }
 
   characterDies() {
-    console.log("Pepe has died.");
     this.character.isDead = true;
     setTimeout(() => {
       this.character = null;
@@ -216,7 +296,6 @@ class World {
         if (this.character.isColliding(coin)) {
           this.level.coins.splice(index, 1);
           this.coinBar.setCoinsCount(this.coinBar.coins + 20);
-          console.log("Coin collected!");
         }
       });
 
@@ -225,14 +304,12 @@ class World {
           this.level.bottles.splice(index, 1);
           this.collectedBottles++;
           this.bottleBar.setBottlesAmount(this.collectedBottles);
-          console.log("Bottle collected! Total: " + this.collectedBottles);
         }
       });
     }, 100);
   }
 
   killEnemy(enemy) {
-    console.log("Killing enemy...");
     enemy.dead = true;
     enemy.currentImage = 0;
     enemy.speed = 0;
@@ -246,13 +323,11 @@ class World {
       const index = this.level.enemies.indexOf(enemy);
       if (index > -1) {
         this.level.enemies.splice(index, 1);
-        console.log("Enemy removed from level.");
       }
     }, 800);
   }
 
   endGame() {
-    console.log("GAME OVER");
     this.gameEnded = true;
 
     const gameOverImage = new Image();
@@ -279,9 +354,6 @@ class World {
       this.level.bottles.push(bottle);
       this.collectedBottles--;
       this.bottleBar.setBottlesAmount(this.collectedBottles);
-      console.log("Bottle thrown! Remaining: " + this.collectedBottles);
-    } else {
-      console.log("No bottles left!");
     }
   }
 }
