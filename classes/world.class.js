@@ -12,6 +12,12 @@ class World {
   bottleBar = new BottleBar();
   collectedBottles = 0;
 
+  soundIcon = new Image();
+  isMuted = false;
+  soundIconX = 580;
+  soundIconY = 450;
+  soundIconSize = 20;
+
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
@@ -28,9 +34,19 @@ class World {
       if (e.key === "x" || e.key === "X") {
         this.throwBottle();
       }
+      if (!this.bgMusic) {
+        this.playBackgroundMusic();
+      }
     });
 
-    this.playBackgroundMusic();
+    this.canvas.addEventListener("click", () => {
+      if (!this.bgMusic) {
+        this.playBackgroundMusic();
+      }
+    });
+
+    this.soundIcon.src = "img/on_canvas_options/unmute.png";
+    this.registerClickEvent();
   }
 
   playBackgroundMusic() {
@@ -38,6 +54,34 @@ class World {
     this.bgMusic.loop = true;
     this.bgMusic.volume = 0.5;
     this.bgMusic.play();
+  }
+
+  registerClickEvent() {
+    this.canvas.addEventListener("click", (event) => {
+      const rect = this.canvas.getBoundingClientRect();
+      const mouseX = event.clientX - rect.left;
+      const mouseY = event.clientY - rect.top;
+
+      if (
+        mouseX >= this.soundIconX &&
+        mouseX <= this.soundIconX + this.soundIconSize &&
+        mouseY >= this.soundIconY &&
+        mouseY <= this.soundIconY + this.soundIconSize
+      ) {
+        this.toggleSound();
+      }
+    });
+  }
+
+  toggleSound() {
+    if (this.isMuted) {
+      this.bgMusic.muted = false;
+      this.soundIcon.src = "img/on_canvas_options/unmute.png";
+    } else {
+      this.bgMusic.muted = true;
+      this.soundIcon.src = "img/on_canvas_options/mute.png";
+    }
+    this.isMuted = !this.isMuted;
   }
 
   setWorld() {
@@ -63,8 +107,17 @@ class World {
     this.addToMap(this.endBossStatusBar);
     this.addToMap(this.coinBar);
     this.addToMap(this.bottleBar);
-    this.ctx.translate(this.camera_x, 0);
 
+    // Draw sound icon fixed on screen
+    this.ctx.drawImage(
+      this.soundIcon,
+      this.soundIconX,
+      this.soundIconY,
+      this.soundIconSize,
+      this.soundIconSize
+    );
+
+    this.ctx.translate(this.camera_x, 0);
     this.ctx.translate(-this.camera_x, 0);
 
     let self = this;
@@ -207,7 +260,6 @@ class World {
 
     gameOverImage.onload = () => {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
       this.ctx.drawImage(
         gameOverImage,
         0,
