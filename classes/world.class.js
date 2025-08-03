@@ -30,37 +30,46 @@ class World {
     this.canvas = canvas;
     this.keyboard = keyboard;
 
-    if (!this.level.coins) console.error("Coins not loaded!");
-    if (!this.level.bottles) console.error("Bottles not loaded!");
-
+    this.checkAssets();
+    this.initIcons();
     this.draw();
     this.setWorld();
     this.checkCollisions();
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "x" || e.key === "X") {
-        this.throwBottle();
-      }
-    });
-
-    this.soundIcon.src = "img/on_canvas_options/unmute.png";
-    this.fullscreenIcon.src = "img/on_canvas_options/open-full-screen.png";
-
+    this.registerKeyEvents();
     this.registerClickEvent();
-
-    this.canvas.addEventListener("click", () => {
-      if (!this.bgMusic) {
-        this.playBackgroundMusic();
-      }
-    });
+    this.registerCanvasClick();
+    this.registerResizeEvent();
 
     this.originalWidth = canvas.width;
     this.originalHeight = canvas.height;
+  }
 
+  checkAssets() {
+    if (!this.level.coins) console.error("Coins not loaded!");
+    if (!this.level.bottles) console.error("Bottles not loaded!");
+  }
+
+  initIcons() {
+    this.soundIcon.src = "img/on_canvas_options/unmute.png";
+    this.fullscreenIcon.src = "img/on_canvas_options/open-full-screen.png";
+  }
+
+  registerKeyEvents() {
+    document.addEventListener("keydown", (e) => {
+      if (e.key.toLowerCase() === "x") this.throwBottle();
+    });
+  }
+
+  registerCanvasClick() {
+    this.canvas.addEventListener("click", () => {
+      if (!this.bgMusic) this.playBackgroundMusic();
+    });
+  }
+
+  registerResizeEvent() {
     window.addEventListener("resize", () => {
-      if (document.fullscreenElement) {
-        this.resizeFullscreen();
-      }
+      if (document.fullscreenElement) this.resizeFullscreen();
     });
   }
 
@@ -73,32 +82,52 @@ class World {
 
   registerClickEvent() {
     this.canvas.addEventListener("click", (e) => {
-      const rect = this.canvas.getBoundingClientRect();
-      let clickX = e.clientX - rect.left;
-      let clickY = e.clientY - rect.top;
-
-      const scaleX = this.canvas.width / rect.width;
-      const scaleY = this.canvas.height / rect.height;
-
-      clickX *= scaleX;
-      clickY *= scaleY;
+      const { clickX, clickY } = this.getScaledClickCoordinates(e);
 
       if (
-        clickX >= this.fullscreenX &&
-        clickX <= this.fullscreenX + this.fullscreenWidth &&
-        clickY >= this.fullscreenY &&
-        clickY <= this.fullscreenY + this.fullscreenHeight
+        this.isInsideArea(
+          clickX,
+          clickY,
+          this.fullscreenX,
+          this.fullscreenY,
+          this.fullscreenWidth,
+          this.fullscreenHeight
+        )
       ) {
         this.toggleFullscreen();
       } else if (
-        clickX >= this.soundX &&
-        clickX <= this.soundX + this.soundWidth &&
-        clickY >= this.soundY &&
-        clickY <= this.soundY + this.soundHeight
+        this.isInsideArea(
+          clickX,
+          clickY,
+          this.soundX,
+          this.soundY,
+          this.soundWidth,
+          this.soundHeight
+        )
       ) {
         this.toggleSound();
       }
     });
+  }
+
+  getScaledClickCoordinates(e) {
+    const rect = this.canvas.getBoundingClientRect();
+    let clickX = e.clientX - rect.left;
+    let clickY = e.clientY - rect.top;
+
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+
+    return {
+      clickX: clickX * scaleX,
+      clickY: clickY * scaleY,
+    };
+  }
+
+  isInsideArea(clickX, clickY, x, y, width, height) {
+    return (
+      clickX >= x && clickX <= x + width && clickY >= y && clickY <= y + height
+    );
   }
 
   toggleSound() {
@@ -114,40 +143,35 @@ class World {
     if (!document.fullscreenElement) {
       this.canvas
         .requestFullscreen()
-        .then(() => {
-          this.canvas.width = window.innerWidth;
-          this.canvas.height = window.innerHeight;
-          this.scaleX = this.canvas.width / this.originalWidth;
-          this.scaleY = this.canvas.height / this.originalHeight;
-
-          this.fullscreenX = this.canvas.width - 30;
-          this.fullscreenY = this.canvas.height - 30;
-          this.soundX = this.canvas.width - 30;
-          this.soundY = 10;
-
-          this.fullscreenIcon.src =
-            "img/on_canvas_options/close-full-screen.png";
-        })
+        .then(() => this.onEnterFullscreen())
         .catch(() => {});
     } else {
       document
         .exitFullscreen()
-        .then(() => {
-          this.canvas.width = this.originalWidth;
-          this.canvas.height = this.originalHeight;
-          this.scaleX = 1;
-          this.scaleY = 1;
-
-          this.fullscreenX = this.canvas.width - 30;
-          this.fullscreenY = this.canvas.height - 30;
-          this.soundX = this.canvas.width - 30;
-          this.soundY = 10;
-
-          this.fullscreenIcon.src =
-            "img/on_canvas_options/open-full-screen.png";
-        })
+        .then(() => this.onExitFullscreen())
         .catch(() => {});
     }
+  }
+
+  onEnterFullscreen() {
+    this.resizeCanvas(window.innerWidth, window.innerHeight);
+    this.fullscreenIcon.src = "img/on_canvas_options/close-full-screen.png";
+  }
+
+  onExitFullscreen() {
+    this.resizeCanvas(this.originalWidth, this.originalHeight);
+    this.fullscreenIcon.src = "img/on_canvas_options/open-full-screen.png";
+  }
+
+  resizeCanvas(width, height) {
+    this.canvas.width = width;
+    this.canvas.height = height;
+    this.scaleX = this.canvas.width / this.originalWidth;
+    this.scaleY = this.canvas.height / this.originalHeight;
+    this.fullscreenX = this.canvas.width - 30;
+    this.fullscreenY = this.canvas.height - 30;
+    this.soundX = this.canvas.width - 30;
+    this.soundY = 10;
   }
 
   resizeFullscreen() {
@@ -167,29 +191,39 @@ class World {
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
     if (this.gameEnded) return;
 
     this.ctx.save();
     this.ctx.scale(this.scaleX, this.scaleY);
-
     this.ctx.translate(this.camera_x, 0);
-    this.addObjectsToMap(this.level.backgroundObjects);
 
+    this.drawBackgroundAndObjects();
+    this.ctx.translate(-this.camera_x, 0);
+    this.drawUI();
+
+    this.ctx.restore();
+    this.drawIcons();
+
+    requestAnimationFrame(() => this.draw());
+  }
+
+  drawBackgroundAndObjects() {
+    this.addObjectsToMap(this.level.backgroundObjects);
     if (this.character) this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.level.bottles);
     this.addObjectsToMap(this.level.clouds);
+  }
 
-    this.ctx.translate(-this.camera_x, 0);
+  drawUI() {
     this.addToMap(this.statusBar);
     this.addToMap(this.endBossStatusBar);
     this.addToMap(this.coinBar);
     this.addToMap(this.bottleBar);
+  }
 
-    this.ctx.restore();
-
+  drawIcons() {
     this.ctx.drawImage(
       this.soundIcon,
       this.soundX,
@@ -197,7 +231,6 @@ class World {
       this.soundWidth,
       this.soundHeight
     );
-
     this.ctx.drawImage(
       this.fullscreenIcon,
       this.fullscreenX,
@@ -205,8 +238,6 @@ class World {
       this.fullscreenWidth,
       this.fullscreenHeight
     );
-
-    requestAnimationFrame(() => this.draw());
   }
 
   addObjectsToMap(objects) {
@@ -282,31 +313,34 @@ class World {
     setInterval(() => {
       if (!this.character) return;
 
-      this.level.enemies.forEach((enemy) => {
-        if (this.character.isColliding(enemy)) {
-          if (this.isJumpingOnEnemy(enemy)) {
-            this.removeEnemy(enemy);
-          } else if (this.canPepeGetHurt(enemy)) {
-            this.hurtPepe();
-          }
-        }
-      });
+      this.level.enemies.forEach((enemy) => this.handleEnemyCollision(enemy));
+      this.handleCollectablesCollision(this.level.coins, "coins", 20);
+      this.handleCollectablesCollision(this.level.bottles, "bottles", 1);
+    }, 100);
+  }
 
-      this.level.coins.forEach((coin, index) => {
-        if (this.character.isColliding(coin)) {
-          this.level.coins.splice(index, 1);
-          this.coinBar.setCoinsCount(this.coinBar.coins + 20);
-        }
-      });
+  handleEnemyCollision(enemy) {
+    if (this.character.isColliding(enemy)) {
+      if (this.isJumpingOnEnemy(enemy)) {
+        this.removeEnemy(enemy);
+      } else if (this.canPepeGetHurt(enemy)) {
+        this.hurtPepe();
+      }
+    }
+  }
 
-      this.level.bottles.forEach((bottle, index) => {
-        if (this.character.isColliding(bottle)) {
-          this.level.bottles.splice(index, 1);
+  handleCollectablesCollision(collection, type, value) {
+    collection.forEach((item, index) => {
+      if (this.character.isColliding(item)) {
+        collection.splice(index, 1);
+        if (type === "coins") {
+          this.coinBar.setCoinsCount(this.coinBar.coins + value);
+        } else if (type === "bottles") {
           this.collectedBottles++;
           this.bottleBar.setBottlesAmount(this.collectedBottles);
         }
-      });
-    }, 100);
+      }
+    });
   }
 
   killEnemy(enemy) {
