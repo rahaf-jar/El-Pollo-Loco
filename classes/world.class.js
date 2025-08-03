@@ -29,6 +29,15 @@ class World {
         this.throwBottle();
       }
     });
+
+    this.playBackgroundMusic();
+  }
+
+  playBackgroundMusic() {
+    this.bgMusic = new Audio("audio/game-music.mp3");
+    this.bgMusic.loop = true;
+    this.bgMusic.volume = 0.5;
+    this.bgMusic.play();
   }
 
   setWorld() {
@@ -194,7 +203,7 @@ class World {
     this.gameEnded = true;
 
     const gameOverImage = new Image();
-    gameOverImage.src = "./img/10_You_won_you_lost/oh_no_you_lost.png"; 
+    gameOverImage.src = "./img/10_You_won_you_lost/oh_no_you_lost.png";
 
     gameOverImage.onload = () => {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
