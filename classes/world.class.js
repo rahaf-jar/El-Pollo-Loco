@@ -50,7 +50,7 @@ class World {
   }
 
   initIcons() {
-    this.soundIcon.src = "img/on_canvas_options/unmute.png";
+    this.soundIcon.src = "img/on_canvas_options/mute.png";
     this.fullscreenIcon.src = "img/on_canvas_options/open-full-screen.png";
   }
 
