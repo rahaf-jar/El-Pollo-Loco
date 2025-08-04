@@ -25,22 +25,21 @@ class World {
   fullscreenWidth = 20;
   fullscreenHeight = 20;
 
+  soundManager = new SoundManager();
+
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-
     this.checkAssets();
     this.initIcons();
     this.draw();
     this.setWorld();
     this.checkCollisions();
-
     this.registerKeyEvents();
     this.registerClickEvent();
     this.registerCanvasClick();
     this.registerResizeEvent();
-
     this.originalWidth = canvas.width;
     this.originalHeight = canvas.height;
   }
@@ -63,7 +62,7 @@ class World {
 
   registerCanvasClick() {
     this.canvas.addEventListener("click", () => {
-      if (!this.bgMusic) this.playBackgroundMusic();
+      this.soundManager.playMusic();
     });
   }
 
@@ -73,17 +72,9 @@ class World {
     });
   }
 
-  playBackgroundMusic() {
-    this.bgMusic = new Audio("audio/game-music.mp3");
-    this.bgMusic.loop = true;
-    this.bgMusic.volume = 0.5;
-    this.bgMusic.play().catch(() => {});
-  }
-
   registerClickEvent() {
     this.canvas.addEventListener("click", (e) => {
       const { clickX, clickY } = this.getScaledClickCoordinates(e);
-
       if (
         this.isInsideArea(
           clickX,
@@ -114,42 +105,28 @@ class World {
     const rect = this.canvas.getBoundingClientRect();
     let clickX = e.clientX - rect.left;
     let clickY = e.clientY - rect.top;
-
     const scaleX = this.canvas.width / rect.width;
     const scaleY = this.canvas.height / rect.height;
-
-    return {
-      clickX: clickX * scaleX,
-      clickY: clickY * scaleY,
-    };
+    return { clickX: clickX * scaleX, clickY: clickY * scaleY };
   }
 
   isInsideArea(clickX, clickY, x, y, width, height) {
-    return (
-      clickX >= x && clickX <= x + width && clickY >= y && clickY <= y + height
-    );
+    return clickX >= x && clickX <= x + width && clickY >= y && clickY <= y + height;
   }
 
   toggleSound() {
-    if (!this.bgMusic) return;
     this.isMuted = !this.isMuted;
-    this.bgMusic.muted = this.isMuted;
     this.soundIcon.src = this.isMuted
       ? "img/on_canvas_options/mute.png"
       : "img/on_canvas_options/unmute.png";
+    this.soundManager.muteAll(this.isMuted);
   }
 
   toggleFullscreen() {
     if (!document.fullscreenElement) {
-      this.canvas
-        .requestFullscreen()
-        .then(() => this.onEnterFullscreen())
-        .catch(() => {});
+      this.canvas.requestFullscreen().then(() => this.onEnterFullscreen()).catch(() => {});
     } else {
-      document
-        .exitFullscreen()
-        .then(() => this.onExitFullscreen())
-        .catch(() => {});
+      document.exitFullscreen().then(() => this.onExitFullscreen()).catch(() => {});
     }
   }
 
@@ -192,18 +169,14 @@ class World {
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     if (this.gameEnded) return;
-
     this.ctx.save();
     this.ctx.scale(this.scaleX, this.scaleY);
     this.ctx.translate(this.camera_x, 0);
-
     this.drawBackgroundAndObjects();
     this.ctx.translate(-this.camera_x, 0);
     this.drawUI();
-
     this.ctx.restore();
     this.drawIcons();
-
     requestAnimationFrame(() => this.draw());
   }
 
@@ -224,26 +197,12 @@ class World {
   }
 
   drawIcons() {
-    this.ctx.drawImage(
-      this.soundIcon,
-      this.soundX,
-      this.soundY,
-      this.soundWidth,
-      this.soundHeight
-    );
-    this.ctx.drawImage(
-      this.fullscreenIcon,
-      this.fullscreenX,
-      this.fullscreenY,
-      this.fullscreenWidth,
-      this.fullscreenHeight
-    );
+    this.ctx.drawImage(this.soundIcon, this.soundX, this.soundY, this.soundWidth, this.soundHeight);
+    this.ctx.drawImage(this.fullscreenIcon, this.fullscreenX, this.fullscreenY, this.fullscreenWidth, this.fullscreenHeight);
   }
 
   addObjectsToMap(objects) {
-    objects.forEach((o) => {
-      this.addToMap(o);
-    });
+    objects.forEach((o) => this.addToMap(o));
   }
 
   addToMap(mo) {
@@ -282,19 +241,16 @@ class World {
     if (!this.character) return;
     this.character.canBeHurt = false;
     this.character.hurtAnimationPlaying = true;
-
     this.character.percentage -= 20;
     this.statusBar.setPercentage(this.character.percentage);
-
+    this.soundManager.play("pepeHurt");
     if (this.character.percentage <= 0) {
       this.characterDies();
     }
-
     setTimeout(() => {
       if (!this.character) return;
       this.character.hurtAnimationPlaying = false;
     }, 1000);
-
     setTimeout(() => {
       if (!this.character) return;
       this.character.canBeHurt = true;
@@ -303,6 +259,7 @@ class World {
 
   characterDies() {
     this.character.isDead = true;
+    this.soundManager.play("pepeDead");
     setTimeout(() => {
       this.character = null;
       this.endGame();
@@ -312,7 +269,6 @@ class World {
   checkCollisions() {
     setInterval(() => {
       if (!this.character) return;
-
       this.level.enemies.forEach((enemy) => this.handleEnemyCollision(enemy));
       this.handleCollectablesCollision(this.level.coins, "coins", 20);
       this.handleCollectablesCollision(this.level.bottles, "bottles", 1);
@@ -335,6 +291,7 @@ class World {
         collection.splice(index, 1);
         if (type === "coins") {
           this.coinBar.setCoinsCount(this.coinBar.coins + value);
+          this.soundManager.play("collectCoin");
         } else if (type === "bottles") {
           this.collectedBottles++;
           this.bottleBar.setBottlesAmount(this.collectedBottles);
@@ -347,47 +304,34 @@ class World {
     enemy.dead = true;
     enemy.currentImage = 0;
     enemy.speed = 0;
-
+    this.soundManager.play("chickenHurt");
     let deathInterval = setInterval(() => {
       enemy.playAnimation(enemy.chicken_dead);
     }, 150);
-
     setTimeout(() => {
       clearInterval(deathInterval);
       const index = this.level.enemies.indexOf(enemy);
-      if (index > -1) {
-        this.level.enemies.splice(index, 1);
-      }
+      if (index > -1) this.level.enemies.splice(index, 1);
     }, 800);
-  }
-
-  endGame() {
-    this.gameEnded = true;
-
-    const gameOverImage = new Image();
-    gameOverImage.src = "./img/10_You_won_you_lost/oh_no_you_lost.png";
-
-    gameOverImage.onload = () => {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.ctx.drawImage(
-        gameOverImage,
-        0,
-        0,
-        this.canvas.width,
-        this.canvas.height
-      );
-    };
   }
 
   throwBottle() {
     if (this.collectedBottles > 0) {
-      const bottle = new ThrowableBottle(
-        this.character.x + 50,
-        this.character.y
-      );
+      const bottle = new ThrowableBottle(this.character.x + 50, this.character.y);
       this.level.bottles.push(bottle);
       this.collectedBottles--;
       this.bottleBar.setBottlesAmount(this.collectedBottles);
     }
+  }
+
+  endGame() {
+    this.gameEnded = true;
+    this.soundManager.stopMusic();
+    const gameOverImage = new Image();
+    gameOverImage.src = "./img/10_You_won_you_lost/oh_no_you_lost.png";
+    gameOverImage.onload = () => {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.drawImage(gameOverImage, 0, 0, this.canvas.width, this.canvas.height);
+    };
   }
 }
