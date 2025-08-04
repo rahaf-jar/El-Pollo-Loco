@@ -60,20 +60,20 @@ function generateSmallChickens() {
   return smallChickens;
 }
 
-const level1 = new Level(
-  [
-    ...generateChickens(),
-    ...generateSmallChickens(),
-    new Endboss(),
-  ],
-
-  [
-    new Cloud("img/5_background/layers/4_clouds/2.png"),
-    new Cloud("img/5_background/layers/4_clouds/1.png"),
-  ],
-
-  generateCoins(),
-  generateBottles(),
-  generateBackgroundObjects(-2000, 12000),
-  11500
-);
+function createLevel1() {
+  return new Level(
+    [
+      ...generateChickens(),
+      ...generateSmallChickens(),
+      new Endboss(),
+    ],
+    [
+      new Cloud("img/5_background/layers/4_clouds/2.png"),
+      new Cloud("img/5_background/layers/4_clouds/1.png"),
+    ],
+    generateCoins(),
+    generateBottles(),
+    generateBackgroundObjects(-2000, 12000),
+    11500
+  );
+}

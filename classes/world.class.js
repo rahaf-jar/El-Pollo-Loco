@@ -1,7 +1,7 @@
 class World {
   character = new Character();
   endBoss = new Endboss();
-  level = level1;
+  level = createLevel1();
   canvas;
   ctx;
   keyboard;
@@ -27,21 +27,24 @@ class World {
 
   soundManager = new SoundManager();
 
+  gameStarted = false;
+  startScreenImage = new Image();
+
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-    this.checkAssets();
     this.initIcons();
-    this.draw();
-    this.setWorld();
-    this.checkCollisions();
+    this.startScreenImage = new Image();
+    this.startScreenImage.src =
+      "img/9_intro_outro_screens/start/startscreen_1.png";
     this.registerKeyEvents();
     this.registerClickEvent();
     this.registerCanvasClick();
     this.registerResizeEvent();
     this.originalWidth = canvas.width;
     this.originalHeight = canvas.height;
+    this.draw();
   }
 
   checkAssets() {
@@ -50,13 +53,19 @@ class World {
   }
 
   initIcons() {
-    this.soundIcon.src = "img/on_canvas_options/mute.png";
+    this.soundIcon.src = "img/on_canvas_options/unmute.png";
     this.fullscreenIcon.src = "img/on_canvas_options/open-full-screen.png";
   }
 
   registerKeyEvents() {
     document.addEventListener("keydown", (e) => {
-      if (e.key.toLowerCase() === "x") this.throwBottle();
+      if (e.key.toLowerCase() === "n" && !this.gameStarted) {
+        this.startGame();
+      }
+
+      if (e.key.toLowerCase() === "x" && this.gameStarted) {
+        this.throwBottle();
+      }
     });
   }
 
@@ -111,7 +120,9 @@ class World {
   }
 
   isInsideArea(clickX, clickY, x, y, width, height) {
-    return clickX >= x && clickX <= x + width && clickY >= y && clickY <= y + height;
+    return (
+      clickX >= x && clickX <= x + width && clickY >= y && clickY <= y + height
+    );
   }
 
   toggleSound() {
@@ -124,9 +135,15 @@ class World {
 
   toggleFullscreen() {
     if (!document.fullscreenElement) {
-      this.canvas.requestFullscreen().then(() => this.onEnterFullscreen()).catch(() => {});
+      this.canvas
+        .requestFullscreen()
+        .then(() => this.onEnterFullscreen())
+        .catch(() => {});
     } else {
-      document.exitFullscreen().then(() => this.onExitFullscreen()).catch(() => {});
+      document
+        .exitFullscreen()
+        .then(() => this.onExitFullscreen())
+        .catch(() => {});
     }
   }
 
@@ -168,7 +185,15 @@ class World {
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    if (!this.gameStarted) {
+      this.drawStartScreen();
+      requestAnimationFrame(() => this.draw());
+      return;
+    }
+
     if (this.gameEnded) return;
+
     this.ctx.save();
     this.ctx.scale(this.scaleX, this.scaleY);
     this.ctx.translate(this.camera_x, 0);
@@ -177,7 +202,20 @@ class World {
     this.drawUI();
     this.ctx.restore();
     this.drawIcons();
+
     requestAnimationFrame(() => this.draw());
+  }
+
+  drawStartScreen() {
+    if (this.startScreenImage.complete) {
+      this.ctx.drawImage(
+        this.startScreenImage,
+        0,
+        0,
+        this.canvas.width,
+        this.canvas.height
+      );
+    }
   }
 
   drawBackgroundAndObjects() {
@@ -197,8 +235,20 @@ class World {
   }
 
   drawIcons() {
-    this.ctx.drawImage(this.soundIcon, this.soundX, this.soundY, this.soundWidth, this.soundHeight);
-    this.ctx.drawImage(this.fullscreenIcon, this.fullscreenX, this.fullscreenY, this.fullscreenWidth, this.fullscreenHeight);
+    this.ctx.drawImage(
+      this.soundIcon,
+      this.soundX,
+      this.soundY,
+      this.soundWidth,
+      this.soundHeight
+    );
+    this.ctx.drawImage(
+      this.fullscreenIcon,
+      this.fullscreenX,
+      this.fullscreenY,
+      this.fullscreenWidth,
+      this.fullscreenHeight
+    );
   }
 
   addObjectsToMap(objects) {
@@ -317,21 +367,48 @@ class World {
 
   throwBottle() {
     if (this.collectedBottles > 0) {
-      const bottle = new ThrowableBottle(this.character.x + 50, this.character.y);
+      const bottle = new ThrowableBottle(
+        this.character.x + 50,
+        this.character.y
+      );
       this.level.bottles.push(bottle);
       this.collectedBottles--;
       this.bottleBar.setBottlesAmount(this.collectedBottles);
     }
   }
 
+  startGame() {
+    this.setWorld();
+    this.checkAssets();
+    this.checkCollisions();
+    this.gameStarted = true;
+    this.soundManager.playMusic();
+  }
+
   endGame() {
     this.gameEnded = true;
     this.soundManager.stopMusic();
+
     const gameOverImage = new Image();
     gameOverImage.src = "./img/10_You_won_you_lost/oh_no_you_lost.png";
+
     gameOverImage.onload = () => {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.ctx.drawImage(gameOverImage, 0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.drawImage(
+        gameOverImage,
+        0,
+        0,
+        this.canvas.width,
+        this.canvas.height
+      );
     };
+
+    setTimeout(() => {
+      this.resetGame();
+    }, 3000);
+  }
+
+  resetGame() {
+    world = new World(this.canvas, this.keyboard);
   }
 }
