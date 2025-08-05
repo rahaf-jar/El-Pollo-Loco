@@ -95,22 +95,25 @@ class Character extends MoveableObject {
       }, 100);
       return;
     }
+
     setInterval(() => {
+      if (!this.world) return;
+
       let isMoving = false;
 
-      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+      if (this.world.keyboard?.RIGHT && this.x < this.world.level.level_end_x) {
         this.x += this.speed;
         this.otherDirection = false;
         isMoving = true;
       }
 
-      if (this.world.keyboard.LEFT && this.x > -1500) {
+      if (this.world.keyboard?.LEFT && this.x > -1500) {
         this.x -= this.speed;
         this.otherDirection = true;
         isMoving = true;
       }
 
-      if (this.world.keyboard.SPACE) {
+      if (this.world.keyboard?.SPACE) {
         this.jump();
       }
 
@@ -131,7 +134,7 @@ class Character extends MoveableObject {
       } else if (this.isAboveGround()) {
         this.playAnimation(this.pepe_jumping);
       } else if (
-        (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) &&
+        (this.world?.keyboard?.RIGHT || this.world?.keyboard?.LEFT) &&
         !this.isAboveGround()
       ) {
         this.playAnimation(this.pepe_walking);
@@ -142,8 +145,8 @@ class Character extends MoveableObject {
 
     setInterval(() => {
       let isStandingStill =
-        !this.world.keyboard.RIGHT &&
-        !this.world.keyboard.LEFT &&
+        !this.world?.keyboard?.RIGHT &&
+        !this.world?.keyboard?.LEFT &&
         !this.isAboveGround() &&
         !this.hurtAnimationPlaying;
 

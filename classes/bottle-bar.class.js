@@ -17,28 +17,30 @@ class BottleBar extends DrawAbleObject {
     this.y = 90;
     this.width = 200;
     this.height = 50;
-    this.setBottlesAmount(100);
+    this.setBottlesAmount(0);
   }
 
   setBottlesAmount(bottles) {
-    this.bottles = Math.max(0, bottles); 
-    let path = this.images[this.resolveImageIndex()];
+    this.bottles = Math.max(0, Math.min(5, bottles)); 
+    const index = this.resolveImageIndex();
+    const path = this.images[index];
     this.img = this.imageCache[path];
   }
- 
+
   resolveImageIndex() {
-    if (this.bottles == 100) {
-      return 0;
-    } else if (this.bottles > 80) {
-      return 1;
-    } else if (this.bottles > 60) {
-      return 2;
-    } else if (this.bottles > 40) {
-      return 3;
-    } else if (this.bottles > 20) {
-      return 4;
-    } else {
-      return 5;
+    switch (this.bottles) {
+      case 5:
+        return 5; 
+      case 4:
+        return 4; 
+      case 3:
+        return 3;
+      case 2:
+        return 2; 
+      case 1:
+        return 1;
+      default:
+        return 0; 
     }
   }
 }

@@ -1,6 +1,6 @@
 function generateCoins() {
   const coins = [];
-  const totalGroups = 10;
+  const totalGroups = 10; // 10 groups × 10 coins = 100 coins total
   const startX = 500;
   const spacing = 1200;
 
@@ -24,17 +24,21 @@ function generateCoins() {
   return coins;
 }
 
+
 function generateBottles() {
   const bottles = [];
-  const bottleCount = 15;
+  const totalBottles = 5;
+  const startX = 1000;
+  const spacing = 2000; 
 
-  for (let i = 0; i < bottleCount; i++) {
-    const x = 800 + Math.floor(Math.random() * 10000); 
+  for (let i = 0; i < totalBottles; i++) {
+    const x = startX + i * spacing;
     bottles.push(new Bottle(x));
   }
 
   return bottles;
 }
+
 
 function generateChickens() {
   const chickens = [];

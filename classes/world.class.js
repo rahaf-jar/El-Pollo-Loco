@@ -320,7 +320,7 @@ class World {
     setInterval(() => {
       if (!this.character) return;
       this.level.enemies.forEach((enemy) => this.handleEnemyCollision(enemy));
-      this.handleCollectablesCollision(this.level.coins, "coins", 20);
+      this.handleCollectablesCollision(this.level.coins, "coins", 1);
       this.handleCollectablesCollision(this.level.bottles, "bottles", 1);
     }, 100);
   }
