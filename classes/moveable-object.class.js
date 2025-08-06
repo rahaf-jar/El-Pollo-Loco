@@ -52,25 +52,23 @@ class MoveableObject extends DrawAbleObject {
   }
 
   isColliding(obj) {
-    const paddingTop = 40;
-    const paddingBottom = 20;
-    const paddingSides = 20;
+    const offset = 10;
 
-    const pepeTop = this.y + paddingTop;
-    const pepeBottom = this.y + this.height - paddingBottom;
-    const pepeLeft = this.x + paddingSides;
-    const pepeRight = this.x + this.width - paddingSides;
+    const thisLeft = this.x + offset;
+    const thisRight = this.x + this.width - offset;
+    const thisTop = this.y + offset;
+    const thisBottom = this.y + this.height - offset;
 
-    const objTop = obj.y;
-    const objBottom = obj.y + obj.height;
-    const objLeft = obj.x;
-    const objRight = obj.x + obj.width;
+    const objLeft = obj.x + offset;
+    const objRight = obj.x + obj.width - offset;
+    const objTop = obj.y + offset;
+    const objBottom = obj.y + obj.height - offset;
 
     return (
-      pepeRight > objLeft &&
-      pepeLeft < objRight &&
-      pepeBottom > objTop &&
-      pepeTop < objBottom
+      thisRight > objLeft &&
+      thisLeft < objRight &&
+      thisBottom > objTop &&
+      thisTop < objBottom
     );
   }
 

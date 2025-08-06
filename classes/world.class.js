@@ -45,6 +45,7 @@ class World {
     this.originalWidth = canvas.width;
     this.originalHeight = canvas.height;
     this.draw();
+    this.thrownBottles = [];
   }
 
   checkAssets() {
@@ -185,15 +186,12 @@ class World {
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
     if (!this.gameStarted) {
       this.drawStartScreen();
       requestAnimationFrame(() => this.draw());
       return;
     }
-
     if (this.gameEnded) return;
-
     this.ctx.save();
     this.ctx.scale(this.scaleX, this.scaleY);
     this.ctx.translate(this.camera_x, 0);
@@ -202,7 +200,6 @@ class World {
     this.drawUI();
     this.ctx.restore();
     this.drawIcons();
-
     requestAnimationFrame(() => this.draw());
   }
 
@@ -225,6 +222,7 @@ class World {
     this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.level.bottles);
     this.addObjectsToMap(this.level.clouds);
+    this.addObjectsToMap(this.thrownBottles);
   }
 
   drawUI() {
@@ -319,10 +317,29 @@ class World {
   checkCollisions() {
     setInterval(() => {
       if (!this.character) return;
+
       this.level.enemies.forEach((enemy) => this.handleEnemyCollision(enemy));
       this.handleCollectablesCollision(this.level.coins, "coins", 1);
       this.handleCollectablesCollision(this.level.bottles, "bottles", 1);
-    }, 100);
+      this.handleBottleEndbossCollision();
+    }, 40);
+  }
+
+  handleBottleEndbossCollision() {
+    this.thrownBottles.forEach((bottle, index) => {
+      if (bottle.isColliding(this.endBoss) && !bottle.hasSplashed) {
+        bottle.splash();
+        bottle.hasSplashed = true;
+
+        this.endBossStatusBar.setPercentage(
+          this.endBossStatusBar.percentage - 20
+        );
+
+        setTimeout(() => {
+          this.thrownBottles.splice(index, 1);
+        }, 600);
+      }
+    });
   }
 
   handleEnemyCollision(enemy) {
@@ -371,7 +388,7 @@ class World {
         this.character.x + 50,
         this.character.y
       );
-      this.level.bottles.push(bottle);
+      this.thrownBottles.push(bottle); // ✅ Use a separate array
       this.collectedBottles--;
       this.bottleBar.setBottlesAmount(this.collectedBottles);
     }
