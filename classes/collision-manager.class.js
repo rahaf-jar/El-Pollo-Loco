@@ -1,8 +1,19 @@
+/**
+ * Manages all collision detection and response logic in the game world.
+ */
 class CollisionManager {
+  /**
+   * Creates a new CollisionManager linked to the game world.
+   * @param {Object} world - The main game world object containing game state and entities.
+   */
   constructor(world) {
     this.world = world;
   }
 
+  /**
+   * Starts the periodic collision checking loop.
+   * Checks for collisions between the character, enemies, bottles, coins, and the end boss.
+   */
   startCollisionChecks() {
     setInterval(() => {
       if (!this.world.character) return;
@@ -19,6 +30,10 @@ class CollisionManager {
     }, 40);
   }
 
+  /**
+   * Handles collision logic when the character collides with a specific enemy.
+   * @param {Object} enemy - The enemy object to check collision against.
+   */
   handleEnemyCollision(enemy) {
     const { character } = this.world;
     if (character.isColliding(enemy)) {
@@ -30,15 +45,30 @@ class CollisionManager {
     }
   }
 
+  /**
+   * Determines if the character is jumping on top of the enemy.
+   * @param {Object} enemy - The enemy to check against.
+   * @returns {boolean} True if the character is falling onto the enemy.
+   */
   isJumpingOnEnemy(enemy) {
     return this.world.character.isFallingOn(enemy);
   }
 
+  /**
+   * Removes the enemy after the character jumps on it.
+   * Applies a bounce effect to the character.
+   * @param {Object} enemy - The enemy to remove.
+   */
   removeEnemy(enemy) {
     this.world.character.speedY = 15;
     this.killEnemy(enemy);
   }
 
+  /**
+   * Checks if the character can be hurt by the enemy collision.
+   * @param {Object} enemy - The enemy involved in the collision.
+   * @returns {boolean} True if the character can take damage.
+   */
   canCharacterGetHurt(enemy) {
     const { character } = this.world;
     return (
@@ -49,6 +79,9 @@ class CollisionManager {
     );
   }
 
+  /**
+   * Applies hurt effects to the character including health reduction and animations.
+   */
   hurtCharacter() {
     const { character, statusBar, soundManager } = this.world;
     character.canBeHurt = false;
@@ -65,6 +98,9 @@ class CollisionManager {
     setTimeout(() => (character.canBeHurt = true), 1200);
   }
 
+  /**
+   * Handles the character's death logic and ends the game.
+   */
   characterDies() {
     const { character, soundManager } = this.world;
     character.isDead = true;
@@ -75,8 +111,13 @@ class CollisionManager {
     }, 1500);
   }
 
+  /**
+   * Handles collisions between thrown bottles and the end boss.
+   * @remarks Applies damage, plays hurt or death animations, and removes bottles after splash.
+   */
   handleBottleEndbossCollision() {
-    const { thrownBottles, endBoss, endBossStatusBar, soundManager } = this.world;
+    const { thrownBottles, endBoss, endBossStatusBar, soundManager } =
+      this.world;
 
     thrownBottles.forEach((bottle, index) => {
       if (bottle.isColliding(endBoss) && !bottle.hasSplashed) {
@@ -98,6 +139,12 @@ class CollisionManager {
     });
   }
 
+  /**
+   * Handles collision detection and collection for coins or bottles.
+   * @param {Array} collection - The array of collectible items (coins or bottles).
+   * @param {string} type - Type of collectible ("coins" or "bottles").
+   * @param {number} value - The amount to increase the count by on collection.
+   */
   handleCollectablesCollision(collection, type, value) {
     const { character, coinBar, bottleBar, soundManager } = this.world;
 
@@ -115,6 +162,10 @@ class CollisionManager {
     });
   }
 
+  /**
+   * Handles the enemy kill process including animation, sound, and removal from the game.
+   * @param {Object} enemy - The enemy to kill.
+   */
   killEnemy(enemy) {
     enemy.dead = true;
     enemy.currentImage = 0;

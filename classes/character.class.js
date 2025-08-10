@@ -1,9 +1,24 @@
+/**
+ * Represents the main player character (Pepe) in the game.
+ * Inherits from MoveableObject and handles movement, animation, and state.
+ */
 class Character extends MoveableObject {
   height = 270;
+
   width = 130;
+
   y = 70;
+
   speed = 10;
+
+  /** Time the character has been idle (in milliseconds) */
   idleTimer = 0;
+
+  /** Reference to the current World object */
+  world;
+
+  /** Timestamp of the last movement, used to detect idling */
+  lastMoveTime = Date.now();
 
   pepe_walking = [
     "img/2_character_pepe/2_walk/W-21.png",
@@ -14,6 +29,7 @@ class Character extends MoveableObject {
     "img/2_character_pepe/2_walk/W-26.png",
   ];
 
+  /** Jumping animation image paths */
   pepe_jumping = [
     "img/2_character_pepe/3_jump/J-31.png",
     "img/2_character_pepe/3_jump/J-32.png",
@@ -68,9 +84,9 @@ class Character extends MoveableObject {
     "img/2_character_pepe/5_dead/D-57.png",
   ];
 
-  world;
-  lastMoveTime = Date.now();
-
+  /**
+   * Creates a new Character instance, loads all animations and sets up behavior.
+   */
   constructor() {
     super();
     this.loadImage("img/2_character_pepe/2_walk/W-21.png");
@@ -88,7 +104,15 @@ class Character extends MoveableObject {
     this.isDead = false;
   }
 
+  /**
+   * Handles the animation and movement logic of the character.
+   * Includes:
+   * - Movement (left/right/jump)
+   * - Switching animation states (walking, jumping, idle, hurt, dead)
+   * - Detecting idle duration to trigger long idle animation
+   */
   animate() {
+    // Movement and camera update
     if (this.isDead) {
       setInterval(() => {
         this.playAnimation(this.pepe_dead);
@@ -96,6 +120,7 @@ class Character extends MoveableObject {
       return;
     }
 
+    // Movement logic and jumping
     setInterval(() => {
       if (!this.world) return;
 
@@ -128,6 +153,7 @@ class Character extends MoveableObject {
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
 
+    // Animation switching based on state
     setInterval(() => {
       if (this.hurtAnimationPlaying) {
         this.playAnimation(this.pepe_hurt);
@@ -143,8 +169,9 @@ class Character extends MoveableObject {
       }
     }, 100);
 
+    // Idle and long idle detection
     setInterval(() => {
-      let isStandingStill =
+      const isStandingStill =
         !this.world?.keyboard?.RIGHT &&
         !this.world?.keyboard?.LEFT &&
         !this.isAboveGround() &&

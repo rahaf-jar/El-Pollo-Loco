@@ -1,5 +1,16 @@
+/**
+ * Manages game sound effects and music playback.
+ */
 class SoundManager {
+  /**
+   * Initializes all sound effects and background music,
+   * sets looping and volume levels.
+   */
   constructor() {
+    /**
+     * Collection of Audio objects for various sounds.
+     * @type {Object<string, HTMLAudioElement>}
+     */
     this.sounds = {
       chickenHurt: new Audio("audio/chicken-sound.wav"),
       pepeHurt: new Audio("audio/pepe-hurt-sound.wav"),
@@ -8,9 +19,11 @@ class SoundManager {
       gameMusic: new Audio("audio/game-music.mp3"),
     };
 
+    // Loop game music and set volume
     this.sounds.gameMusic.loop = true;
     this.sounds.gameMusic.volume = 0.5;
 
+    // Set volume for all other sounds
     for (let key in this.sounds) {
       if (key !== "gameMusic") {
         this.sounds[key].volume = 0.5;
@@ -18,6 +31,12 @@ class SoundManager {
     }
   }
 
+  /**
+   * Plays the sound effect by name from the sounds collection.
+   * Resets playback to start for overlapping sounds.
+   *
+   * @param {string} name - The key name of the sound to play.
+   */
   play(name) {
     const sound = this.sounds[name];
     if (sound) {
@@ -26,6 +45,9 @@ class SoundManager {
     }
   }
 
+  /**
+   * Plays the background game music if not already playing.
+   */
   playMusic() {
     const music = this.sounds.gameMusic;
     if (music && music.paused) {
@@ -33,6 +55,9 @@ class SoundManager {
     }
   }
 
+  /**
+   * Stops the background game music and resets playback.
+   */
   stopMusic() {
     const music = this.sounds.gameMusic;
     if (music && !music.paused) {
@@ -41,6 +66,11 @@ class SoundManager {
     }
   }
 
+  /**
+   * Mutes or unmutes all sounds and music.
+   *
+   * @param {boolean} muted - True to mute all sounds, false to unmute.
+   */
   muteAll(muted) {
     for (let sound of Object.values(this.sounds)) {
       sound.muted = muted;

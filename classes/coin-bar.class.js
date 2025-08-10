@@ -1,3 +1,7 @@
+/**
+ * Represents a coin status bar UI element that visually displays the number of coins collected.
+ * Extends DrawAbleObject for drawing capabilities.
+ */
 class CoinBar extends DrawAbleObject {
   images = [
     "img/7_statusbars/1_statusbar/1_statusbar_coin/green/0.png",
@@ -10,6 +14,9 @@ class CoinBar extends DrawAbleObject {
 
   coins = 0;
 
+  /**
+   * Creates a new CoinBar instance, loads all bar images, and sets default position and size.
+   */
   constructor() {
     super();
     this.loadImages(this.images);
@@ -17,9 +24,15 @@ class CoinBar extends DrawAbleObject {
     this.y = 45;
     this.width = 200;
     this.height = 50;
-    this.setCoinsCount(0); 
+    this.setCoinsCount(0);
   }
 
+  /**
+   * Updates the displayed coin count and changes the bar image accordingly.
+   * Clamps the coins value between 0 and 100.
+   *
+   * @param {number} coins - The new coin count to set.
+   */
   setCoinsCount(coins) {
     this.coins = Math.max(0, Math.min(100, coins));
     const index = this.resolveImageIndex();
@@ -27,6 +40,11 @@ class CoinBar extends DrawAbleObject {
     this.img = this.imageCache[path];
   }
 
+  /**
+   * Determines the image index to use based on the current coin count.
+   *
+   * @returns {number} Index in the images array corresponding to the coins count.
+   */
   resolveImageIndex() {
     if (this.coins >= 100) return 5;
     else if (this.coins >= 80) return 4;

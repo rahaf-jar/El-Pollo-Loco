@@ -1,3 +1,7 @@
+/**
+ * Represents the status bar for the End Boss's health.
+ * Extends DrawAbleObject to display different health states as images.
+ */
 class EndBossStatusBar extends DrawAbleObject {
   images = [
     "img/7_statusbars/2_statusbar_endboss/blue/blue0.png",
@@ -7,9 +11,11 @@ class EndBossStatusBar extends DrawAbleObject {
     "img/7_statusbars/2_statusbar_endboss/blue/blue80.png",
     "img/7_statusbars/2_statusbar_endboss/blue/blue100.png",
   ];
-
   percentage = 100;
 
+  /**
+   * Creates a new EndBossStatusBar instance, loading images and setting position.
+   */
   constructor() {
     super();
     this.loadImages(this.images);
@@ -20,14 +26,22 @@ class EndBossStatusBar extends DrawAbleObject {
     this.setPercentage(100);
   }
 
+  /**
+   * Updates the health percentage and sets the corresponding status bar image.
+   * @param {number} percentage - New health percentage (clamped to 0 or above).
+   */
   setPercentage(percentage) {
-    this.percentage = Math.max(0, percentage); 
-    let path = this.images[this.resolveImageIndex()];
+    this.percentage = Math.max(0, percentage);
+    const path = this.images[this.resolveImageIndex()];
     this.img = this.imageCache[path];
   }
 
+  /**
+   * Determines the image index based on current health percentage.
+   * @returns {number} Index corresponding to the health state image.
+   */
   resolveImageIndex() {
-    if (this.percentage == 100) {
+    if (this.percentage === 100) {
       return 5;
     } else if (this.percentage > 80) {
       return 4;

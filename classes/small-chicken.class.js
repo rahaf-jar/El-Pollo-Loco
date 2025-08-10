@@ -1,9 +1,13 @@
+/**
+ * Represents a small chicken enemy that moves left and can be killed.
+ * Extends MoveableObject.
+ */
 class SmallChicken extends MoveableObject {
   y = 400;
   width = 45;
   height = 50;
   dead = false;
-
+  
   small_chicken_walking = [
     "img/3_enemies_chicken/chicken_small/1_walk/1_w.png",
     "img/3_enemies_chicken/chicken_small/1_walk/2_w.png",
@@ -14,16 +18,24 @@ class SmallChicken extends MoveableObject {
     "img/3_enemies_chicken/chicken_small/2_dead/dead.png"
   ];
 
+  /**
+   * Creates a small chicken enemy at a given horizontal position.
+   * 
+   * @param {number} x - The X coordinate where the chicken is placed.
+   */
   constructor(x) {
     super();
     this.loadImage("img/3_enemies_chicken/chicken_small/1_walk/1_w.png");
     this.loadImages(this.small_chicken_walking);
     this.loadImages(this.chicken_dead);
-    this.x = x; 
+    this.x = x;
     this.speed = 0.35 + Math.random() * 2.9;
     this.animate();
   }
 
+  /**
+   * Starts the chicken's movement and animation loop.
+   */
   animate() {
     this.moveLeft();
     setInterval(() => {
@@ -35,6 +47,9 @@ class SmallChicken extends MoveableObject {
     }, 200);
   }
 
+  /**
+   * Moves the chicken to the left continuously if not dead.
+   */
   moveLeft() {
     setInterval(() => {
       if (!this.dead) {
