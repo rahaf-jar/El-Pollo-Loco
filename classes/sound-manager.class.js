@@ -7,10 +7,6 @@ class SoundManager {
    * sets looping and volume levels.
    */
   constructor() {
-    /**
-     * Collection of Audio objects for various sounds.
-     * @type {Object<string, HTMLAudioElement>}
-     */
     this.sounds = {
       chickenHurt: new Audio("audio/chicken-sound.wav"),
       pepeHurt: new Audio("audio/pepe-hurt-sound.wav"),
@@ -18,12 +14,8 @@ class SoundManager {
       collectCoin: new Audio("audio/collect-coin-sound.wav"),
       gameMusic: new Audio("audio/game-music.mp3"),
     };
-
-    // Loop game music and set volume
     this.sounds.gameMusic.loop = true;
     this.sounds.gameMusic.volume = 0.5;
-
-    // Set volume for all other sounds
     for (let key in this.sounds) {
       if (key !== "gameMusic") {
         this.sounds[key].volume = 0.5;
