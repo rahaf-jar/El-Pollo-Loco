@@ -25,8 +25,8 @@ class CollisionManager {
       });
 
       this.handleBottleEndbossCollision();
-      this.handleCollectablesCollision(this.world.level.coins, "coins", 1);
-      this.handleCollectablesCollision(this.world.level.bottles, "bottles", 1);
+      this.handleCollectablesCollision(this.world.level.coins, "coins", 1, true);
+      this.handleCollectablesCollision(this.world.level.bottles, "bottles", 1, false);
     }, 40);
   }
 
@@ -116,7 +116,7 @@ class CollisionManager {
    * @remarks Applies damage, plays hurt or death animations, and removes bottles after splash.
    */
   handleBottleEndbossCollision() {
-    const { thrownBottles, endBoss, endBossStatusBar, soundManager } =
+    const { thrownBottles, endBoss, endBossStatusBar} =
       this.world;
 
     thrownBottles.forEach((bottle, index) => {
@@ -144,13 +144,19 @@ class CollisionManager {
    * @param {Array} collection - The array of collectible items (coins or bottles).
    * @param {string} type - Type of collectible ("coins" or "bottles").
    * @param {number} value - The amount to increase the count by on collection.
+   * @param {boolean} useItemCollisionMethod - Whether to call item's isColliding (true for coins).
    */
-  handleCollectablesCollision(collection, type, value) {
+  handleCollectablesCollision(collection, type, value, useItemCollisionMethod = false) {
     const { character, coinBar, bottleBar, soundManager } = this.world;
 
     collection.forEach((item, index) => {
-      if (character.isColliding(item)) {
+      const collision = useItemCollisionMethod
+        ? item.isColliding(character)
+        : character.isColliding(item);
+
+      if (collision) {
         collection.splice(index, 1);
+
         if (type === "coins") {
           coinBar.setCoinsCount(coinBar.coins + value);
           soundManager.play("collectCoin");

@@ -33,14 +33,14 @@ class MoveableObject extends DrawAbleObject {
 
     if (this.currentImage >= images.length) {
       if (loop) {
-        this.currentImage = 0; // Restart animation
+        this.currentImage = 0; 
       } else {
-        this.currentImage = images.length - 1; // Stay on last frame
+        this.currentImage = images.length - 1; 
       }
     }
 
     const path = images[this.currentImage];
-    this.img = this.imageCache[path]; // Set current image to display
+    this.img = this.imageCache[path];
     this.currentImage++;
   }
 
@@ -50,12 +50,11 @@ class MoveableObject extends DrawAbleObject {
    */
   applyGravity() {
     setInterval(() => {
-      // If object is above ground or moving upwards (jumping/falling)
       if (this.isAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY; // Move vertically by speedY
-        this.speedY -= this.acceleration; // Decrease speedY due to gravity
+        this.y -= this.speedY;
+        this.speedY -= this.acceleration;
       } else {
-        this.speedY = 0; // Reset vertical speed if on ground
+        this.speedY = 0;
       }
     }, 1000 / 25);
   }
@@ -65,7 +64,7 @@ class MoveableObject extends DrawAbleObject {
    * @returns {boolean} True if above ground, false if on ground.
    */
   isAboveGround() {
-    return this.y < 170; // Ground level assumed at y=170
+    return this.y < 170;
   }
 
   /**
@@ -90,7 +89,7 @@ class MoveableObject extends DrawAbleObject {
    */
   jump() {
     if (!this.isAboveGround()) {
-      this.speedY = 30; // Initial jump speed upwards
+      this.speedY = 30;
     }
   }
 
@@ -108,9 +107,7 @@ class MoveableObject extends DrawAbleObject {
    * @param {MoveableObject} obj - Another object to check collision against.
    * @returns {boolean} True if colliding, false otherwise.
    */
-  isColliding(obj) {
-    const offset = 10;
-
+  isColliding(obj, offset = 10) {
     const thisLeft = this.x + offset;
     const thisRight = this.x + this.width - offset;
     const thisTop = this.y + offset;

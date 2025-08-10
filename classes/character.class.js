@@ -112,15 +112,12 @@ class Character extends MoveableObject {
    * - Detecting idle duration to trigger long idle animation
    */
   animate() {
-    // Movement and camera update
     if (this.isDead) {
       setInterval(() => {
         this.playAnimation(this.pepe_dead);
       }, 100);
       return;
     }
-
-    // Movement logic and jumping
     setInterval(() => {
       if (!this.world) return;
 
@@ -153,7 +150,6 @@ class Character extends MoveableObject {
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
 
-    // Animation switching based on state
     setInterval(() => {
       if (this.hurtAnimationPlaying) {
         this.playAnimation(this.pepe_hurt);
@@ -169,7 +165,6 @@ class Character extends MoveableObject {
       }
     }, 100);
 
-    // Idle and long idle detection
     setInterval(() => {
       const isStandingStill =
         !this.world?.keyboard?.RIGHT &&

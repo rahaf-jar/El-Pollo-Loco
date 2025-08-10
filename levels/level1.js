@@ -5,7 +5,7 @@
  */
 function generateCoins() {
   const coins = [];
-  const totalGroups = 10; // 10 groups × 10 coins = 100 coins total
+  const totalGroups = 10;
   const startX = 500;
   const spacing = 1200;
 

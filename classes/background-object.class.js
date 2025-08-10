@@ -15,6 +15,6 @@ class BackgroundObject extends MoveableObject {
     super();
     this.loadImage(imagePath);
     this.x = x;
-    this.y = 480 - this.height; // Aligns the object to the bottom of the canvas
+    this.y = 480 - this.height;
   }
 }

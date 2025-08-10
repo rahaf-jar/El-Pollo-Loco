@@ -33,7 +33,7 @@ class BottleBar extends DrawAbleObject {
     this.y = 90;
     this.width = 200;
     this.height = 50;
-    this.setBottlesAmount(0); // Start with 0 bottles displayed
+    this.setBottlesAmount(0);
   }
 
   /**

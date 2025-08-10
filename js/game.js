@@ -24,19 +24,19 @@ function init() {
  * @param {KeyboardEvent} event - The keyboard event triggered by user input.
  */
 window.addEventListener("keydown", (event) => {
-  if (event.keyCode == 39) { // Right arrow
+  if (event.keyCode == 39) { 
     keyboard.RIGHT = true;
   }
-  if (event.keyCode == 37) { // Left arrow
+  if (event.keyCode == 37) {
     keyboard.LEFT = true;
   }
-  if (event.keyCode == 38) { // Up arrow
+  if (event.keyCode == 38) { 
     keyboard.UP = true;
   }
-  if (event.keyCode == 40) { // Down arrow
+  if (event.keyCode == 40) {
     keyboard.DOWN = true;
   }
-  if (event.keyCode == 32) { // Spacebar
+  if (event.keyCode == 32) { 
     keyboard.SPACE = true;
   }
 });
@@ -47,19 +47,19 @@ window.addEventListener("keydown", (event) => {
  * @param {KeyboardEvent} event - The keyboard event triggered by user input.
  */
 window.addEventListener("keyup", (event) => {
-  if (event.keyCode == 39) { // Right arrow
+  if (event.keyCode == 39) {
     keyboard.RIGHT = false;
   }
-  if (event.keyCode == 37) { // Left arrow
+  if (event.keyCode == 37) {
     keyboard.LEFT = false;
   }
-  if (event.keyCode == 38) { // Up arrow
+  if (event.keyCode == 38) {
     keyboard.UP = false;
   }
-  if (event.keyCode == 40) { // Down arrow
+  if (event.keyCode == 40) {
     keyboard.DOWN = false;
   }
-  if (event.keyCode == 32) { // Spacebar
+  if (event.keyCode == 32) {
     keyboard.SPACE = false;
   }
 });

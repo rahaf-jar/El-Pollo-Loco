@@ -13,7 +13,7 @@ class Bottle extends DrawAbleObject {
     super();
     this.loadImage("img/6_salsa_bottle/2_salsa_bottle_on_ground.png");
     this.x = x;
-    this.y = 380; // Fixed Y position to sit on the ground
+    this.y = 380;
     this.width = 60;
     this.height = 70;
   }

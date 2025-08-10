@@ -79,8 +79,6 @@ class World {
     this.initIcons();
     this.startScreenImage.src =
       "img/9_intro_outro_screens/start/startscreen_1.png";
-
-    // Initialize managers
     this.uiManager = new UIManager(this, this.ctx);
     this.inputManager = new InputManager(this, canvas, keyboard);
     this.collisionManager = new CollisionManager(this);
