@@ -86,6 +86,17 @@ class World {
     this.registerResizeEvent();
     this.setWorld();
     this.draw();
+
+    this.endGameImages = {
+      won: new Image(),
+      lost: new Image(),
+    };
+    this.endGameImages.won.src = "img/10_You_won_you_lost/You_won_A.png";
+    this.endGameImages.lost.src = "img/10_You_won_you_lost/oh_no_you_lost.png";
+    this.didWin = false;
+
+    this.endGameBackground = new Image();
+    this.endGameBackground.src = "img/5_background/second_half_background.png";
   }
 
   /** Links the character to the world instance */
@@ -109,25 +120,16 @@ class World {
   }
 
   /** Ends the game and displays the "Game Over" screen */
-  endGame() {
+  endGame(won) {
     this.gameEnded = true;
+    this.didWin = won;
     this.soundManager.stopMusic();
 
-    const gameOverImage = new Image();
-    gameOverImage.src = "./img/10_You_won_you_lost/oh_no_you_lost.png";
-
-    gameOverImage.onload = () => {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.ctx.drawImage(
-        gameOverImage,
-        0,
-        0,
-        this.canvas.width,
-        this.canvas.height
-      );
-    };
-
-    setTimeout(() => this.resetGame(), 3000);
+    if (this.character) this.character.isDead = true;
+    if (this.endBoss) this.endBoss.isDead = true;
+    setTimeout(() => {
+      this.resetGame();
+    }, 3000);
   }
 
   /** Resets the game by creating a new world instance */
@@ -239,7 +241,37 @@ class World {
       return;
     }
 
-    if (this.gameEnded) return;
+    if (this.gameEnded) {
+      if (this.endGameBackground.complete) {
+        this.ctx.drawImage(
+          this.endGameBackground,
+          0,
+          0,
+          this.canvas.width,
+          this.canvas.height
+        );
+      }
+      this.ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+      const endImg = this.didWin
+        ? this.endGameImages.won
+        : this.endGameImages.lost;
+
+      if (endImg.complete) {
+        const imgWidth = this.canvas.width / 2;
+        const imgHeight = (endImg.height / endImg.width) * imgWidth;
+        this.ctx.drawImage(
+          endImg,
+          this.canvas.width / 2 - imgWidth / 2,
+          this.canvas.height / 2 - imgHeight / 2,
+          imgWidth,
+          imgHeight
+        );
+      }
+
+      return;
+    }
 
     this.ctx.save();
     this.ctx.scale(this.scaleX, this.scaleY);

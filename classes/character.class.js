@@ -106,6 +106,13 @@ class Character extends MoveableObject {
     this.isDead = false;
   }
 
+  checkDead() {
+    if (!this.isDead && this.percentage <= 0) {
+      this.isDead = true;
+      this.world.endGame(false); 
+    }
+  }
+
   /**
    * Handles the animation and movement logic of the character.
    * Includes:
@@ -164,6 +171,7 @@ class Character extends MoveableObject {
         this.playAnimation(this.pepe_walking);
       } else if (this.percentage <= 0) {
         this.playAnimation(this.pepe_dead);
+        this.checkDead();
       }
     }, 100);
 

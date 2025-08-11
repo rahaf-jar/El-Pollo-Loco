@@ -150,6 +150,8 @@ class Endboss extends MoveableObject {
     this.currentAnimation = "dead";
     world.soundManager.play("chickenHurt");
 
+    world.endGame(true); 
+
     setTimeout(() => {
       let i = world.level.enemies.indexOf(this);
       if (i !== -1) {
