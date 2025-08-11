@@ -20,6 +20,8 @@ class Character extends MoveableObject {
   /** Timestamp of the last movement, used to detect idling */
   lastMoveTime = Date.now();
 
+  isThrowing = false;
+
   pepe_walking = [
     "img/2_character_pepe/2_walk/W-21.png",
     "img/2_character_pepe/2_walk/W-22.png",
@@ -170,7 +172,8 @@ class Character extends MoveableObject {
         !this.world?.keyboard?.RIGHT &&
         !this.world?.keyboard?.LEFT &&
         !this.isAboveGround() &&
-        !this.hurtAnimationPlaying;
+        !this.hurtAnimationPlaying &&
+        !this.isThrowing;
 
       if (isStandingStill) {
         this.idleTimer += 300;

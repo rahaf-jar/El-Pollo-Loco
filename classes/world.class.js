@@ -213,7 +213,8 @@ class World {
 
   /** Throws a bottle if the player has any */
   throwBottle() {
-    if (this.collectedBottles > 0) {
+    if (this.collectedBottles > 0 && !this.character.isDead) {
+      this.character.isThrowing = true;
       const bottle = new ThrowableBottle(
         this.character.x + 50,
         this.character.y
@@ -221,6 +222,10 @@ class World {
       this.thrownBottles.push(bottle);
       this.collectedBottles--;
       this.bottleBar.setBottlesAmount(this.collectedBottles);
+
+      setTimeout(() => {
+        this.character.isThrowing = false;
+      }, 500);
     }
   }
 
