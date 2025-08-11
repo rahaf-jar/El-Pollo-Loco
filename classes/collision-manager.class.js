@@ -24,9 +24,20 @@ class CollisionManager {
         }
       });
 
+      this.handleEndbossCollision();
       this.handleBottleEndbossCollision();
-      this.handleCollectablesCollision(this.world.level.coins, "coins", 1, true);
-      this.handleCollectablesCollision(this.world.level.bottles, "bottles", 1, false);
+      this.handleCollectablesCollision(
+        this.world.level.coins,
+        "coins",
+        1,
+        true
+      );
+      this.handleCollectablesCollision(
+        this.world.level.bottles,
+        "bottles",
+        1,
+        false
+      );
     }, 40);
   }
 
@@ -42,6 +53,26 @@ class CollisionManager {
       } else if (this.canCharacterGetHurt(enemy)) {
         this.hurtCharacter();
       }
+    }
+  }
+
+  /**
+   * Handles collision between the character and the endboss.
+   * If collided, character is hurt and endboss plays alert animation.
+   */
+  handleEndbossCollision() {
+    const { character, endBoss } = this.world;
+
+    if (
+      character &&
+      endBoss &&
+      character.isColliding(endBoss) &&
+      character.canBeHurt &&
+      !endBoss.isDead &&
+      !character.isJumping()
+    ) {
+      this.hurtCharacter(); 
+      endBoss.playAlert();
     }
   }
 
@@ -116,8 +147,7 @@ class CollisionManager {
    * @remarks Applies damage, plays hurt or death animations, and removes bottles after splash.
    */
   handleBottleEndbossCollision() {
-    const { thrownBottles, endBoss, endBossStatusBar} =
-      this.world;
+    const { thrownBottles, endBoss, endBossStatusBar } = this.world;
 
     thrownBottles.forEach((bottle, index) => {
       if (bottle.isColliding(endBoss) && !bottle.hasSplashed) {
@@ -146,7 +176,12 @@ class CollisionManager {
    * @param {number} value - The amount to increase the count by on collection.
    * @param {boolean} useItemCollisionMethod - Whether to call item's isColliding (true for coins).
    */
-  handleCollectablesCollision(collection, type, value, useItemCollisionMethod = false) {
+  handleCollectablesCollision(
+    collection,
+    type,
+    value,
+    useItemCollisionMethod = false
+  ) {
     const { character, coinBar, bottleBar, soundManager } = this.world;
 
     collection.forEach((item, index) => {

@@ -27,6 +27,17 @@ class Endboss extends MoveableObject {
     "img/4_enemie_boss_chicken/5_dead/G26.png",
   ];
 
+  endboss_alert = [
+    "img/4_enemie_boss_chicken/2_alert/G5.png",
+    "img/4_enemie_boss_chicken/2_alert/G6.png",
+    "img/4_enemie_boss_chicken/2_alert/G7.png",
+    "img/4_enemie_boss_chicken/2_alert/G8.png",
+    "img/4_enemie_boss_chicken/2_alert/G9.png",
+    "img/4_enemie_boss_chicken/2_alert/G10.png",
+    "img/4_enemie_boss_chicken/2_alert/G11.png",
+    "img/4_enemie_boss_chicken/2_alert/G12.png",
+  ];
+
   constructor() {
     super();
     this.x = 11000;
@@ -35,6 +46,7 @@ class Endboss extends MoveableObject {
     this.loadImages(this.endboss_walking);
     this.loadImages(this.endboss_hurt);
     this.loadImages(this.endboss_dead);
+    this.loadImages(this.endboss_alert);
 
     this.animate();
   }
@@ -74,6 +86,17 @@ class Endboss extends MoveableObject {
       this.currentAnimation = name;
     }
     this.playAnimation(images, true);
+  }
+
+  /**
+   * Plays the alert animation once.
+   */
+  playAlert() {
+    if (this.isDead || this.isHurt) return;
+
+    this.currentAnimation = "alert";
+    this.currentImage = 0;
+    this.playAnimation(this.endboss_alert, false);
   }
 
   /**
