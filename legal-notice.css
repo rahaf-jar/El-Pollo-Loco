@@ -1,0 +1,47 @@
+@font-face {
+    font-family: roboto;
+    src: url(./fonts/Roboto-Regular.ttf);
+}
+
+html {
+    font-family: roboto;
+}
+
+a {
+    color: hsl(203, 100%, 49%);
+    text-decoration: none;
+}
+
+body {
+    background-color: hsl(0, 0%, 97%);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    background-color: hsl(0, 0%, 100%);
+    margin: 15px auto;
+    padding: 20px;
+    border: 1px solid hsl(0, 0%, 80%);
+    border-radius: 8px;
+    max-height: 920px;
+}
+
+h1 {
+    color: hsl(203, 100%, 49%);
+    text-align: center;
+}
+
+h2 {
+    color: hsl(0, 0%, 20%);
+    margin-top: 20px;
+}
+
+p {
+    color: hsl(0, 0%, 33%);
+    line-height: 1.5;
+}

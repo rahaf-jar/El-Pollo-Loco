@@ -3,6 +3,11 @@
     src: url(./fonts/Barriecito-Regular.ttf);
 }
 
+@font-face {
+    font-family: roboto;
+    src: url(./fonts/Roboto-Regular.ttf);
+}
+
 html {
     font-family: Barriecito-Regular;
 }
@@ -64,7 +69,7 @@ canvas {
     text-align: center;
     color: hsl(43, 90%, 45%);
     font-weight: 100;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: roboto;
 }
 
 p {
@@ -72,4 +77,37 @@ p {
     background-color: hsla(0, 0%, 0%, 0.5);
     border-radius: 8px;
     border: 1.5px solid hsla(43, 96%, 37%, 0.915);
+}
+
+header {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 0px;
+    z-index: 2;
+    flex-direction: column;
+}
+
+a {
+    color: hsl(43, 90%, 45%);
+    text-decoration: none;
+}
+
+header button{
+    background-color: hsla(0, 0%, 0%, 0.5);
+    color: hsl(43, 90%, 45%);
+    border: 1.5px solid hsla(43, 96%, 37%, 0.915);
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px;
+    box-shadow: 0 5px 30px hsla(0, 0%, 0%, 0.6);
+}
+
+header button:hover {
+    background-color: hsla(0, 0%, 0%, 0.3);
+    color: hsla(37, 92%, 48%, 0.94);
+    box-shadow: 0 5px 20px hsla(0, 0%, 65%, 0.256);
 }
