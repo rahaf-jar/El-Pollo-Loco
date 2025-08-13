@@ -18,6 +18,7 @@ body {
     padding: 0;
     display: flex;
     justify-content: center;
+    align-items: center;
     min-height: 100vh;
 }
 
@@ -28,7 +29,7 @@ body {
     padding: 20px;
     border: 1px solid hsl(0, 0%, 80%);
     border-radius: 8px;
-    max-height: 920px;
+    max-height: 90vh;
 }
 
 h1 {
@@ -39,9 +40,45 @@ h1 {
 h2 {
     color: hsl(0, 0%, 20%);
     margin-top: 20px;
+    margin-bottom: -5px;
 }
 
 p {
     color: hsl(0, 0%, 33%);
     line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+    .container {
+        position: relative;
+        width: 80%;
+        overflow-y: scroll;
+    }
+
+    h1{
+        font-size: 28px;
+    }
+
+    h2 {
+        margin-top: 20px;
+        font-size: 22px;
+    }
+
+    p {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 500px) {
+    h1{
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    p {
+        font-size: 14px;
+    }
 }
