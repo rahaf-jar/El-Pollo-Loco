@@ -41,9 +41,16 @@
     <script src="js/game.js"></script>
   </head>
   <body onload="init()">
+    <div id="rotate-screen" class="d_none">
+      <div class="rotate-message">
+        <b>📱 Rotate your device to play</b>
+      </div>
+    </div>
     <header>
       <button><a href="./legal.notice.html">legal notice</a></button>
-      <button onclick="openAboutTheGame()" id="about_the_game">About the Game</button>
+      <button onclick="openAboutTheGame()" id="about_the_game">
+        About the Game
+      </button>
     </header>
     <div class="background"></div>
 

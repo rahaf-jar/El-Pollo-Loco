@@ -69,7 +69,7 @@ function openAboutTheGame() {
   aboutTheGameRef.innerHTML = "";
   aboutTheGameRef.innerHTML += getAboutTheGameTemplate();
 
-  aboutTheGameRef.classList.toggle('d_none'); 
+  aboutTheGameRef.classList.toggle("d_none");
 }
 
 function toggleOff() {
