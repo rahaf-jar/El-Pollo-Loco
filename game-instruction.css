@@ -3,7 +3,7 @@
     src: url(./fonts/Roboto-Regular.ttf);
 }
 
-.game-instructions{
+.game-instructions {
     font-family: roboto;
     display: flex;
     flex-direction: column;
@@ -20,17 +20,17 @@
     transform: translate(-50%, -50%);
     z-index: 1000;
     gap: 10px;
+    overflow-x: hidden;
 }
 
-.game-explaination-text{
+.game-explaination-text {
     color: hsl(0, 0%, 33%);
     line-height: 1.5;
     margin-bottom: 10px;
     text-align: center;
-
 }
 
-.rules-of-survival{
+.rules-of-survival {
     color: hsl(0, 0%, 23%);
     width: 400px;
     display: flex;
@@ -45,19 +45,19 @@
     margin-bottom: 10px;
 }
 
-h4{
+h4 {
     color: white;
     margin: 0;
     font-weight: 700;
     font-size: 18px;
 }
 
-h2{
+h2 {
     color: hsl(16, 89%, 50%);
     text-shadow: 1px 6px 8px hsla(0, 0%, 0%, 0.367);
 }
 
-h3{
+h3 {
     margin: 0;
     color: hsl(16, 84%, 54%);
 }
@@ -67,16 +67,39 @@ h3{
     font-weight: bold;
 }
 
-#overlay{
+#overlay {
     height: 100vh;
     width: 100%;
-    background-color: hsla(8, 73%, 10%, 0.727);;
+    background-color: hsla(8, 73%, 10%, 0.727);
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
 }
 
-.d_none{
+.d_none {
     display: none;
+}
+
+@media screen and (orientation: landscape) {
+
+    h1,
+    .user-instructions {
+        display: none;
+    }
+
+    .game-instructions {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+
+    h2 {
+        margin-top: 250px;
+    }
+
+    #canvas {
+        width: 80%;
+        height: 80%;
+    }
+
 }
