@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>El Pollo Loco</title>
-
     <link rel="stylesheet" href="style.css" />
     <link
       rel="shortcut icon"
@@ -27,7 +26,6 @@
     <script src="classes/background-object.class.js"></script>
     <script src="classes/endboss.class.js"></script>
     <script src="classes/keyboard.class.js"></script>
-
     <script src="classes/level.class.js"></script>
     <script src="js/background-generator.js"></script>
     <script src="levels/level1.js"></script>
@@ -42,22 +40,28 @@
   </head>
   <body onload="init()">
     <div id="rotate-screen" class="d_none">
-      <div class="rotate-message">
-        <b>📱 Rotate your device to play</b>
-      </div>
+      <div class="rotate-message"><b>📱 Rotate your device to play</b></div>
     </div>
     <header>
-      <button><a href="./legal.notice.html">legal notice</a></button>
-      <button onclick="openAboutTheGame()" id="about_the_game">
-        About the Game
-      </button>
+      <div class="header-buttons-landscape">
+        <img
+          onclick="openMenu()"
+          id="menu_icon"
+          class="menu-icon"
+          src="./img/on_canvas_options/menu.png"
+          alt=""
+        />
+      </div>
+      <div class="header-buttons">
+        <button><a href="./legal.notice.html">legal notice</a></button>
+        <button onclick="openAboutTheGame()" id="about_the_game">
+          About the Game
+        </button>
+      </div>
     </header>
     <div class="background"></div>
-
     <h1>El Pollo Loco</h1>
-
     <canvas width="700" height="480" id="canvas"></canvas>
-
     <div class="user-instructions">
       <div class="sub-instructions">
         <p>Press 'N' to start</p>
@@ -68,7 +72,8 @@
         <p>Press 'arrow left / right' to move</p>
       </div>
     </div>
-
     <div onclick="toggleOff()" class="d_none" id="overlay"></div>
+
+    <div onclick="toggleMenu()" class="d_none" id="menu_overlay"></div>
   </body>
 </html>

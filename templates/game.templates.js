@@ -27,3 +27,16 @@ function getAboutTheGameTemplate() {
         
     `;
 }
+
+function getMenu() {
+  return /*html*/ ` 
+    <div class="buttons-menu">
+      <button>
+        <a href="./legal.notice.html">legal notice</a>
+      </button>
+      <button onclick="openAboutTheGame()" id="about_the_game">
+        About the Game
+      </button>
+    </div>
+  `;
+}
