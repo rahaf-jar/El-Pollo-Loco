@@ -1,11 +1,13 @@
 /** * The HTML canvas element where the game is rendered. * @type {HTMLCanvasElement} */ let canvas;
 let world;
 let keyboard = new Keyboard();
+
 /** * Initializes the game by setting up the canvas, creating the world, * and logging the main character instance. * Should be called once the DOM is loaded. */ function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
   console.log("my character is", world.character);
 }
+
 /** * Listens for keydown events and updates the keyboard state accordingly. * Maps arrow keys and spacebar to boolean flags in the Keyboard instance. * @param {KeyboardEvent} event - The keyboard event triggered by user input. */ window.addEventListener(
   "keydown",
   (event) => {
@@ -26,6 +28,7 @@ let keyboard = new Keyboard();
     }
   }
 );
+
 /** * Listens for keyup events and updates the keyboard state accordingly. * Resets the respective key flags in the Keyboard instance when keys are released. * @param {KeyboardEvent} event - The keyboard event triggered by user input. */ window.addEventListener(
   "keyup",
   (event) => {
@@ -46,12 +49,14 @@ let keyboard = new Keyboard();
     }
   }
 );
+
 function openAboutTheGame() {
   let aboutTheGameRef = document.getElementById("overlay");
   aboutTheGameRef.innerHTML = "";
   aboutTheGameRef.innerHTML += getAboutTheGameTemplate();
   aboutTheGameRef.classList.toggle("d_none");
 }
+
 function openMenu() {
   let menuRef = document.getElementById("menu_overlay");
   menuRef.innerHTML = "";
@@ -59,12 +64,7 @@ function openMenu() {
   menuRef.classList.toggle("d_none");
 }
 
-function toggleMenu() {
-  let menuOverlayRef = document.getElementById("menu_overlay");
-  menuOverlayRef.classList.toggle("d_none");
-}
-
-function toggleOff() {
-  let overlayRef = document.getElementById("overlay");
+function toggleOff(overlayId) {
+  let overlayRef = document.getElementById(overlayId);
   overlayRef.classList.toggle("d_none");
 }
