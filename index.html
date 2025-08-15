@@ -11,6 +11,7 @@
       href="./img/7_statusbars/3_icons/icon_coin.png"
       type="image/x-icon"
     />
+    <link rel="stylesheet" href="game-instruction.css" />
     <script src="classes/drawable-Object.class.js"></script>
     <script src="classes/moveable-object.class.js"></script>
     <script src="classes/character.class.js"></script>
@@ -36,12 +37,13 @@
     <script src="classes/input-manager.class.js"></script>
     <script src="classes/world.class.js"></script>
     <script src="classes/throwable-Object.class.js"></script>
+    <script src="templates/game.templates.js"></script>
     <script src="js/game.js"></script>
   </head>
   <body onload="init()">
     <header>
       <button><a href="./legal.notice.html">legal notice</a></button>
-      <button><a href="">About the Game</a></button>
+      <button onclick="openAboutTheGame()" id="about_the_game">About the Game</button>
     </header>
     <div class="background"></div>
 
@@ -59,5 +61,7 @@
         <p>Press 'arrow left / right' to move</p>
       </div>
     </div>
+
+    <div onclick="toggleOff()" class="d_none" id="overlay"></div>
   </body>
 </html>

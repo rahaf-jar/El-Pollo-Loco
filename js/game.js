@@ -1,4 +1,4 @@
-/** 
+/**
  * The HTML canvas element where the game is rendered.
  * @type {HTMLCanvasElement}
  */
@@ -24,19 +24,19 @@ function init() {
  * @param {KeyboardEvent} event - The keyboard event triggered by user input.
  */
 window.addEventListener("keydown", (event) => {
-  if (event.keyCode == 39) { 
+  if (event.keyCode == 39) {
     keyboard.RIGHT = true;
   }
   if (event.keyCode == 37) {
     keyboard.LEFT = true;
   }
-  if (event.keyCode == 38) { 
+  if (event.keyCode == 38) {
     keyboard.UP = true;
   }
   if (event.keyCode == 40) {
     keyboard.DOWN = true;
   }
-  if (event.keyCode == 32) { 
+  if (event.keyCode == 32) {
     keyboard.SPACE = true;
   }
 });
@@ -63,3 +63,16 @@ window.addEventListener("keyup", (event) => {
     keyboard.SPACE = false;
   }
 });
+
+function openAboutTheGame() {
+  let aboutTheGameRef = document.getElementById("overlay");
+  aboutTheGameRef.innerHTML = "";
+  aboutTheGameRef.innerHTML += getAboutTheGameTemplate();
+
+  aboutTheGameRef.classList.toggle('d_none'); 
+}
+
+function toggleOff() {
+  let overlayRef = document.getElementById("overlay");
+  overlayRef.classList.toggle("d_none");
+}
