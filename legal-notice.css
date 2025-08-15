@@ -82,3 +82,9 @@ p {
         font-size: 14px;
     }
 }
+
+@media screen and (orientation: landscape) and (max-width: 800px) {
+    .container{
+        height: 250px;
+    }
+}
