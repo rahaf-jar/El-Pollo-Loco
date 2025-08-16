@@ -132,7 +132,7 @@ header button:hover {
     color: hsl(60, 2%, 19%);
 }
 
-@media screen and (orientation: portrait) and (max-width: 750px) {
+@media screen and (orientation: portrait) and (max-width: 1040px) {
 
     header,
     .background,
