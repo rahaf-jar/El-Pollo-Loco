@@ -23,6 +23,7 @@ class InputManager {
     this.registerKeyEvents();
     this.registerCanvasClick();
     this.registerClickEvent();
+    this.registerTouchEvents();
   }
 
   /**
@@ -78,6 +79,41 @@ class InputManager {
       ) {
         this.world.toggleSound();
       }
+    });
+  }
+
+  /**
+   * Registers touch events for mobile controls.
+   * - LEFT/RIGHT: continuous until finger lifts
+   * - SPACE (jump): triggers once per tap
+   * - THROW: triggers once per tap
+   */
+  registerTouchEvents() {
+    this.canvas.addEventListener("touchstart", (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const x = (touch.clientX - rect.left) * (this.canvas.width / rect.width);
+      const y = (touch.clientY - rect.top) * (this.canvas.height / rect.height);
+
+      this.world.mobileButtons.forEach((btn) => {
+        if (
+          this.world.isInsideArea(x, y, btn.x, btn.y, btn.width, btn.height)
+        ) {
+          if (btn.action === "LEFT" || btn.action === "RIGHT") {
+            this.keyboard[btn.action] = true;
+          } else if (btn.action === "SPACE") {
+            this.keyboard.SPACE = true;
+            setTimeout(() => (this.keyboard.SPACE = false), 150);
+          } else if (btn.action === "THROW") {
+            this.world.throwBottle();
+          }
+        }
+      });
+    });
+
+    this.canvas.addEventListener("touchend", () => {
+      this.keyboard.LEFT = false;
+      this.keyboard.RIGHT = false;
     });
   }
 

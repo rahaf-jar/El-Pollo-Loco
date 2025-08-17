@@ -41,6 +41,10 @@ class UIManager {
       this.world.fullscreenWidth,
       this.world.fullscreenHeight
     );
+
+    this.world.mobileButtons.forEach((btn) => {
+      this.ctx.drawImage(btn.img, btn.x, btn.y, btn.width, btn.height);
+    });
   }
 
   /**
