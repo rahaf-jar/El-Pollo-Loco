@@ -68,3 +68,10 @@ function toggleOff(overlayId) {
   let overlayRef = document.getElementById(overlayId);
   overlayRef.classList.toggle("d_none");
 }
+
+function startGameFromButton() {
+  if (world && typeof world.startGame === "function") {
+    world.startGame();
+    document.getElementById("start-button-container").style.display = "none";
+  }
+}
