@@ -32,23 +32,28 @@
     margin-right: 160px;
 }
 
-.start-game-button{
+.start-game-button {
     position: absolute;
-    bottom: 160px;
+    bottom: 460px;
     left: 50%;
     transform: translateX(-50%);
     background-color: transparent;
     border: none;
     cursor: pointer;
     z-index: 1001;
+    display: flex;
 }
 
 .start-game-button img {
-    width: 80px;
+    width: 100px;
 }
 
 @media (min-width: 1400px) {
     #mobile-control-buttons {
+        display: none;
+    }
+
+    .start-game-button {
         display: none;
     }
 }
@@ -87,6 +92,27 @@
 
 }
 
+@media (max-height: 920px) {
+    .start-game-button {
+        bottom: 390px;
+    }
+
+    .start-game-button img {
+        width: 120px;
+    }
+}
+
+@media (max-height: 820px) {
+    .start-game-button {
+        bottom: 350px;
+    }
+
+    .start-game-button img {
+        width: 120px;
+    }
+}
+
+
 @media (max-height: 800px) {
     #mobile-control-buttons {
         bottom: 100px;
@@ -101,6 +127,14 @@
         margin-left: 150px;
         margin-right: 150px;
     }
+
+    .start-game-button {
+        bottom: 360px;
+    }
+
+    .start-game-button img {
+        width: 100px;
+    }
 }
 
 @media (max-height: 770px) {
@@ -111,6 +145,10 @@
     .mobile-buttons-containers {
         margin-left: 125px;
         margin-right: 125px;
+    }
+
+    .start-game-button {
+        bottom: 330px;
     }
 }
 
@@ -127,6 +165,10 @@
     .mobile-buttons-containers {
         margin-left: 120px;
         margin-right: 120px;
+    }
+
+    .start-game-button {
+        bottom: 260px;
     }
 }
 
@@ -145,6 +187,14 @@
         margin-right: 85px;
     }
 
+    .start-game-button {
+        bottom: 220px;
+    }
+
+    .start-game-button img {
+        width: 100px;
+    }
+
 }
 
 @media (max-height: 430px) {
@@ -160,6 +210,14 @@
     .mobile-buttons-containers {
         margin-left: 100px;
         margin-right: 100px;
+    }
+
+    .start-game-button {
+        bottom: 170px;
+    }
+
+    .start-game-button img {
+        width: 100px;
     }
 }
 
@@ -177,12 +235,28 @@
         margin-left: 100px;
         margin-right: 100px;
     }
+
+    .start-game-button {
+        bottom: 170px;
+    }
+
+    .start-game-button img {
+        width: 80px;
+    }
 }
 
 @media (max-height: 375px) {
     .mobile-buttons-containers {
         margin-left: 80px;
         margin-right: 80px;
+    }
+
+    .start-game-button {
+        bottom: 150px;
+    }
+
+    .start-game-button img {
+        width: 80px;
     }
 }
 
@@ -194,6 +268,14 @@
     .mobile-buttons-containers {
         margin-left: 100px;
         margin-right: 100px;
+    }
+
+    .start-game-button {
+        bottom: 130px;
+    }
+
+    .start-game-button img {
+        width: 80px;
     }
 
 }
