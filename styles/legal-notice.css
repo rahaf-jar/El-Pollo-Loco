@@ -1,6 +1,6 @@
 @font-face {
     font-family: roboto;
-    src: url(./fonts/Roboto-Regular.ttf);
+    src: url(../fonts/Roboto-Regular.ttf);
 }
 
 html {
@@ -83,8 +83,30 @@ p {
     }
 }
 
-@media screen and (orientation: landscape) and (max-width: 1400px) {
+@media screen and (orientation: landscape) and (max-width: 800px) {
     .container{
         height: 250px;
+        overflow: scroll;
+    }
+}
+
+@media (max-height: 800px) {
+    .container{
+        height: 650px;
+        overflow: scroll;
+    }
+}
+
+@media (max-height: 600px) {
+    .container{
+        height: 450px;
+        overflow: scroll;
+    }
+}
+
+@media (max-height: 550px) {
+    .container{
+        height: 250px;
+        overflow: scroll;
     }
 }
