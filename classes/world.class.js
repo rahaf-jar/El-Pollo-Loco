@@ -97,28 +97,6 @@ class World {
 
     this.endGameBackground = new Image();
     this.endGameBackground.src = "img/5_background/second_half_background.png";
-
-    this.mobileButtons = [
-      new ControlButton("img/mobile/left.png", 20, 400, 60, 60, "LEFT"),
-      new ControlButton("img/mobile/throw.png", 20, 330, 60, 60, "THROW"),
-
-      new ControlButton(
-        "img/mobile/right.png",
-        this.canvas.width - 80,
-        400,
-        60,
-        60,
-        "RIGHT"
-      ),
-      new ControlButton(
-        "img/mobile/jump.png",
-        this.canvas.width - 80,
-        330,
-        60,
-        60,
-        "SPACE"
-      ),
-    ];
   }
 
   /** Links the character to the world instance */

@@ -14,6 +14,7 @@ class InputManager {
     this.canvas = canvas;
     this.keyboard = keyboard;
     this.registerEvents();
+    this.registerHTMLButtonEvents();
   }
 
   /**
@@ -23,7 +24,6 @@ class InputManager {
     this.registerKeyEvents();
     this.registerCanvasClick();
     this.registerClickEvent();
-    this.registerTouchEvents();
   }
 
   /**
@@ -83,41 +83,6 @@ class InputManager {
   }
 
   /**
-   * Registers touch events for mobile controls.
-   * - LEFT/RIGHT: continuous until finger lifts
-   * - SPACE (jump): triggers once per tap
-   * - THROW: triggers once per tap
-   */
-  registerTouchEvents() {
-    this.canvas.addEventListener("touchstart", (e) => {
-      const rect = this.canvas.getBoundingClientRect();
-      const touch = e.touches[0];
-      const x = (touch.clientX - rect.left) * (this.canvas.width / rect.width);
-      const y = (touch.clientY - rect.top) * (this.canvas.height / rect.height);
-
-      this.world.mobileButtons.forEach((btn) => {
-        if (
-          this.world.isInsideArea(x, y, btn.x, btn.y, btn.width, btn.height)
-        ) {
-          if (btn.action === "LEFT" || btn.action === "RIGHT") {
-            this.keyboard[btn.action] = true;
-          } else if (btn.action === "SPACE") {
-            this.keyboard.SPACE = true;
-            setTimeout(() => (this.keyboard.SPACE = false), 150);
-          } else if (btn.action === "THROW") {
-            this.world.throwBottle();
-          }
-        }
-      });
-    });
-
-    this.canvas.addEventListener("touchend", () => {
-      this.keyboard.LEFT = false;
-      this.keyboard.RIGHT = false;
-    });
-  }
-
-  /**
    * Calculates the scaled click coordinates relative to the canvas size.
    * @param {MouseEvent} e - The mouse event.
    * @returns {{clickX: number, clickY: number}} The scaled X and Y click coordinates.
@@ -129,5 +94,38 @@ class InputManager {
     const scaleX = this.canvas.width / rect.width;
     const scaleY = this.canvas.height / rect.height;
     return { clickX: clickX * scaleX, clickY: clickY * scaleY };
+  }
+
+  registerHTMLButtonEvents() {
+    const btnLeft = document.getElementById("btn-left");
+    btnLeft.addEventListener("touchstart", () => (this.keyboard.LEFT = true));
+    btnLeft.addEventListener("touchend", () => (this.keyboard.LEFT = false));
+    btnLeft.addEventListener("mousedown", () => (this.keyboard.LEFT = true));
+    btnLeft.addEventListener("mouseup", () => (this.keyboard.LEFT = false));
+    btnLeft.addEventListener("mouseleave", () => (this.keyboard.LEFT = false));
+
+    const btnRight = document.getElementById("btn-right");
+    btnRight.addEventListener("touchstart", () => (this.keyboard.RIGHT = true));
+    btnRight.addEventListener("touchend", () => (this.keyboard.RIGHT = false));
+    btnRight.addEventListener("mousedown", () => (this.keyboard.RIGHT = true));
+    btnRight.addEventListener("mouseup", () => (this.keyboard.RIGHT = false));
+    btnRight.addEventListener(
+      "mouseleave",
+      () => (this.keyboard.RIGHT = false)
+    );
+
+    const btnJump = document.getElementById("btn-jump");
+    btnJump.addEventListener("touchstart", () => {
+      this.keyboard.SPACE = true;
+      setTimeout(() => (this.keyboard.SPACE = false), 150);
+    });
+    btnJump.addEventListener("mousedown", () => {
+      this.keyboard.SPACE = true;
+      setTimeout(() => (this.keyboard.SPACE = false), 150);
+    });
+
+    const btnThrow = document.getElementById("btn-throw");
+    btnThrow.addEventListener("touchstart", () => this.world.throwBottle());
+    btnThrow.addEventListener("mousedown", () => this.world.throwBottle());
   }
 }

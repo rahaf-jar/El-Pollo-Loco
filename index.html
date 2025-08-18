@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>El Pollo Loco</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="mobile-buttons.css" />
     <link
       rel="shortcut icon"
       href="./img/7_statusbars/3_icons/icon_coin.png"
@@ -33,7 +34,6 @@
     <script src="classes/collision-manager.class.js"></script>
     <script src="classes/ui-manager.class.js"></script>
     <script src="classes/input-manager.class.js"></script>
-    <script src="classes/control-button.class.js"></script>
     <script src="classes/world.class.js"></script>
     <script src="classes/throwable-Object.class.js"></script>
     <script src="templates/game.templates.js"></script>
@@ -63,6 +63,26 @@
     <div class="background"></div>
     <h1>El Pollo Loco</h1>
     <canvas width="700" height="480" id="canvas"></canvas>
+
+    <div id="mobile-control-buttons">
+      <div class="mobile-buttons-containers">
+        <button class="mobile-buttons" id="btn-throw">
+          <img src="img/mobile/throw.png" alt="" />
+        </button>
+        <button class="mobile-buttons" id="btn-jump">
+          <img src="img/mobile/jump.png" alt="" />
+        </button>
+      </div>
+      <div class="mobile-buttons-containers">
+        <button class="mobile-buttons" id="btn-left">
+          <img src="img/mobile/left.png" alt="" />
+        </button>
+        <button class="mobile-buttons" id="btn-right">
+          <img src="img/mobile/right.png" alt="" />
+        </button>
+      </div>
+    </div>
+
     <div class="user-instructions">
       <div class="sub-instructions">
         <p>Press 'N' to start</p>
@@ -75,6 +95,10 @@
     </div>
     <div onclick="toggleOff('overlay')" class="d_none" id="overlay"></div>
 
-    <div onclick="toggleOff('menu_overlay')" class="d_none" id="menu_overlay"></div>
+    <div
+      onclick="toggleOff('menu_overlay')"
+      class="d_none"
+      id="menu_overlay"
+    ></div>
   </body>
 </html>
