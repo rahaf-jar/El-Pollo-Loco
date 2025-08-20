@@ -57,6 +57,13 @@ function openAboutTheGame() {
   aboutTheGameRef.classList.toggle("d_none");
 }
 
+function openLegalNotice() {
+  let aboutTheGameRef = document.getElementById("overlay");
+  aboutTheGameRef.innerHTML = "";
+  aboutTheGameRef.innerHTML += getLegalNoticeTemplate();
+  aboutTheGameRef.classList.toggle("d_none");
+}
+
 function openMenu() {
   let menuRef = document.getElementById("menu_overlay");
   menuRef.innerHTML = "";

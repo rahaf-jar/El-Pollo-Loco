@@ -23,17 +23,65 @@ function getAboutTheGameTemplate() {
       </div>
       <h3>One chance. Five bottles. One giant chicken.</h3>
       <h3>Good luck, hero. 🐔🔥</h3>
+    </div>`;
+}
+
+function getLegalNoticeTemplate() {
+  return /*html*/ `
+  <div class="container">
+    <div class="h1">Legal Notice</div>
+
+    <span class="h2">Game Title</span>
+    <div class="p">El Pollo Loco</div>
+
+    <span class="h2">Publisher</span>
+    <div class="p">
+      Rahaf Jarrous<br />
+      bahnhoferstraße 20<br />
+      93053<br />
+      Germany
     </div>
-        
-    `;
+
+    <span class="h2">Contact</span>
+    <div class="p">
+      Email: <a href="mailto:jarrousrahaf@gmail.com">jarrousrahaf@gmail.com</a><br />
+      Phone: <a href="tel:017683062949">017683062949</a>
+    </div>
+
+    <span class="h2">Disclaimer</span>
+    <div class="p">
+      The contents of this game were created with care. However, we cannot
+      guarantee the accuracy, completeness, or timeliness of the content.
+    </div>
+
+    <span class="h2">Liability for Links</span>
+    <div class="p">
+      Our game may contain links to external websites we cannot control. We
+      are not responsible for the content of these websites. The provider or
+      operator is always responsible for their content.
+    </div>
+
+    <span class="h2">Privacy Policy</span>
+    <div class="p">
+      We respect your privacy and do not collect personal data without your
+      consent. Any information you choose to provide (such as through contact
+      forms or support requests) will be handled securely and never shared
+      with third parties, except as required by law.
+    </div>
+
+    <span class="h2">Copyright</span>
+    <div class="p">
+      All graphics, sounds, and texts in this game are protected by copyright.
+      Any reproduction, distribution, or public reproduction requires prior
+      written consent from the copyright holder.
+    </div>
+  </div>`;
 }
 
 function getMenu() {
   return /*html*/ ` 
     <div class="buttons-menu">
-      <button>
-        <a href="./legal.notice.html">legal notice</a>
-      </button>
+      <button onclick="openLegalNotice()">Legal Notice</button>
       <button onclick="openAboutTheGame()" id="about_the_game">
         About the Game
       </button>

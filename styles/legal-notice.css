@@ -1,112 +1,46 @@
-@font-face {
-    font-family: roboto;
-    src: url(../fonts/Roboto-Regular.ttf);
-}
-
-html {
-    font-family: roboto;
-}
-
 a {
     color: hsl(203, 100%, 49%);
     text-decoration: none;
 }
 
-body {
-    background-color: hsl(0, 0%, 97%);
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
-
 .container {
+    font-family: roboto;
     max-width: 800px;
     background-color: hsl(0, 0%, 100%);
-    margin: 15px auto;
     padding: 20px;
     border: 1px solid hsl(0, 0%, 80%);
     border-radius: 8px;
     max-height: 90vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    gap: 10px;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
-h1 {
+.h1 {
     color: hsl(203, 100%, 49%);
     text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0 0 20px 0;
 }
 
-h2 {
+.h2 {
     color: hsl(0, 0%, 20%);
+    display: block;
     margin-top: 20px;
     margin-bottom: -5px;
+    font-size: 24px;
+    font-weight: bold;
 }
 
-p {
+.p {
     color: hsl(0, 0%, 33%);
     line-height: 1.5;
-}
-
-@media (max-width: 900px) {
-    .container {
-        position: relative;
-        width: 80%;
-        overflow-y: scroll;
-    }
-
-    h1{
-        font-size: 28px;
-    }
-
-    h2 {
-        margin-top: 20px;
-        font-size: 22px;
-    }
-
-    p {
-        font-size: 15px;
-    }
-}
-
-@media (max-width: 500px) {
-    h1{
-        font-size: 24px;
-    }
-
-    h2 {
-        font-size: 18px;
-    }
-
-    p {
-        font-size: 14px;
-    }
-}
-
-@media screen and (orientation: landscape) and (max-width: 800px) {
-    .container{
-        height: 250px;
-        overflow: scroll;
-    }
-}
-
-@media (max-height: 800px) {
-    .container{
-        height: 650px;
-        overflow: scroll;
-    }
-}
-
-@media (max-height: 600px) {
-    .container{
-        height: 450px;
-        overflow: scroll;
-    }
-}
-
-@media (max-height: 550px) {
-    .container{
-        height: 250px;
-        overflow: scroll;
-    }
+    font-size: 16px;
+    margin-top: 5px;
 }

@@ -89,11 +89,6 @@ header {
     flex-direction: column;
 }
 
-a {
-    color: hsl(43, 90%, 45%);
-    text-decoration: none;
-}
-
 header button {
     background-color: hsla(0, 0%, 0%, 0.5);
     color: hsl(43, 90%, 45%);
@@ -141,7 +136,6 @@ header button:hover {
         display: block;
     }
 }
-
 
 @media screen and (orientation: portrait) and (max-width: 1040px) {
 
