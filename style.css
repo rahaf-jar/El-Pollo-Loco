@@ -79,14 +79,13 @@ p {
     border: 1.5px solid hsla(43, 96%, 37%, 0.915);
 }
 
-header {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+.header-container{
     display: flex;
-    gap: 0px;
-    z-index: 2;
-    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    height: 100vh;
+    max-width: 1920px;
+    justify-content: flex-end;
 }
 
 header button {

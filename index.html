@@ -11,7 +11,7 @@
       href="./img/7_statusbars/3_icons/icon_coin.png"
       type="image/x-icon"
     />
-    <link rel="stylesheet" href="styles/legal-notice.css">
+    <link rel="stylesheet" href="styles/legal-notice.css" />
     <link rel="stylesheet" href="styles/game-instruction.css" />
     <script src="classes/drawable-Object.class.js"></script>
     <script src="classes/moveable-object.class.js"></script>
@@ -44,29 +44,35 @@
     <div id="rotate-screen" class="d_none">
       <div class="rotate-message"><b>📱 Rotate your device to play</b></div>
     </div>
-    <header>
-      <div class="header-buttons-landscape">
-        <img
-          onclick="openMenu()"
-          id="menu_icon"
-          class="menu-icon"
-          src="./img/on_canvas_options/menu.png"
-          alt=""
-        />
-      </div>
-      <div class="header-buttons">
-        <button onclick="openLegalNotice()">Legal Notice</button>
-        <button onclick="openAboutTheGame()" id="about_the_game">
-          About the Game
-        </button>
-      </div>
-    </header>
+    <div class="header-container">
+      <header>
+        <div class="header-buttons-landscape">
+          <img
+            onclick="openMenu()"
+            id="menu_icon"
+            class="menu-icon"
+            src="./img/on_canvas_options/menu.png"
+            alt=""
+          />
+        </div>
+        <div class="header-buttons">
+          <button onclick="openLegalNotice()">Legal Notice</button>
+          <button onclick="openAboutTheGame()" id="about_the_game">
+            About the Game
+          </button>
+        </div>
+      </header>
+    </div>
     <div class="background"></div>
     <h1>El Pollo Loco</h1>
     <canvas width="700" height="480" id="canvas"></canvas>
     <div id="start-button-container">
-      <button class="start-game-button" id="start-game-button" onclick="startGameFromButton()">
-        <img src="img/on_canvas_options/play.png" alt="">
+      <button
+        class="start-game-button"
+        id="start-game-button"
+        onclick="startGameFromButton()"
+      >
+        <img src="img/on_canvas_options/play.png" alt="" />
       </button>
     </div>
 
