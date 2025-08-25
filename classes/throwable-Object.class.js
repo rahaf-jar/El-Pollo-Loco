@@ -28,6 +28,7 @@ class ThrowableBottle extends MoveableObject {
    */
   constructor(x, y) {
     super();
+    this.world = world;
     this.loadImage(this.bottle_rotation[0]);
     this.loadImages(this.bottle_rotation);
     this.loadImages(this.bottle_splash);
@@ -62,14 +63,30 @@ class ThrowableBottle extends MoveableObject {
    * Called when the bottle collides or hits the ground.
    */
   splash() {
+    if (this.hasSplashed) return;
+
     this.hasSplashed = true;
     this.speedX = 0;
     this.speedY = 0;
     this.gravity = 0;
 
     clearInterval(this.rotationInterval);
+    clearInterval(this.gravityInterval);
 
     this.playAnimation(this.bottle_splash);
+
+    setTimeout(() => {
+      if (this.world && this.world.thrownBottles) {
+        const index = this.world.thrownBottles.indexOf(this);
+        if (index !== -1) {
+          this.world.thrownBottles.splice(index, 1);
+        }
+      }
+    }, 300); 
+  }
+
+  isAboveGround() {
+    return this.y < 480;
   }
 
   /**
@@ -82,6 +99,10 @@ class ThrowableBottle extends MoveableObject {
         this.y -= this.speedY;
         this.speedY -= this.gravity;
         this.x += this.speedX;
+        if (this.y >= 380) {
+          this.y = 380;
+          this.splash();
+        }
       }
     }, 1000 / 25);
   }
