@@ -109,7 +109,7 @@ class Character extends MoveableObject {
   checkDead() {
     if (!this.isDead && this.percentage <= 0) {
       this.isDead = true;
-      this.world.endGame(false); 
+      this.world.endGame(false);
     }
   }
 
@@ -133,9 +133,18 @@ class Character extends MoveableObject {
       let isMoving = false;
 
       if (this.world.keyboard?.RIGHT && this.x < this.world.level.level_end_x) {
-        this.x += this.speed;
-        this.otherDirection = false;
-        isMoving = true;
+        let endBoss = this.world.endBoss;
+
+        let isCloseToEndboss =
+          endBoss &&
+          this.x + this.width + this.speed >= endBoss.x &&
+          this.x < endBoss.x + endBoss.width;
+
+        if (!isCloseToEndboss) {
+          this.x += this.speed;
+          this.otherDirection = false;
+          isMoving = true;
+        }
       }
 
       if (this.world.keyboard?.LEFT && this.x > -1500) {
