@@ -9,7 +9,7 @@ class Character extends MoveableObject {
 
   y = 70;
 
-  speed = 10;
+  speed = 13;
 
   /** Time the character has been idle (in milliseconds) */
   idleTimer = 0;

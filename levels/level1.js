@@ -6,8 +6,8 @@
 function generateCoins() {
   const coins = [];
   const totalGroups = 10;
-  const startX = 500;
-  const spacing = 1200;
+  const startX = 400;
+  const spacing = 800;
 
   for (let i = 0; i < totalGroups; i++) {
     const baseX = startX + i * spacing;

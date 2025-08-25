@@ -2,7 +2,7 @@ class Endboss extends MoveableObject {
   width = 350;
   height = 400;
   y = 60;
-  speed = 1.15;
+  speed = 1.1;
 
   isHurt = false;
   isDead = false;
@@ -40,7 +40,7 @@ class Endboss extends MoveableObject {
 
   constructor() {
     super();
-    this.x = 11000;
+    this.x = 11900;
 
     this.loadImage(this.endboss_walking[0]);
     this.loadImages(this.endboss_walking);
