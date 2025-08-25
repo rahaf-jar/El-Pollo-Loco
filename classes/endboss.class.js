@@ -149,14 +149,15 @@ class Endboss extends MoveableObject {
     this.currentImage = 0;
     this.currentAnimation = "dead";
     world.soundManager.play("chickenHurt");
-
-    world.endGame(true); 
+    const animationDuration = this.endboss_dead.length * 400; 
 
     setTimeout(() => {
       let i = world.level.enemies.indexOf(this);
       if (i !== -1) {
         world.level.enemies.splice(i, 1);
       }
-    }, 1000);
+
+      world.endGame(true);
+    }, animationDuration);
   }
 }
