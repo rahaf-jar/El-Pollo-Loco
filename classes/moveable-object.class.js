@@ -68,14 +68,6 @@ class MoveableObject extends DrawAbleObject {
   }
 
   /**
-   * Moves the object to the right.
-   * (Currently only logs a message; should implement movement logic.)
-   */
-  moveRight() {
-    console.log("Move right");
-  }
-
-  /**
    * Moves the object to the left by decreasing its x position every frame.
    */
   moveLeft() {

@@ -5,7 +5,6 @@ let keyboard = new Keyboard();
 /** * Initializes the game by setting up the canvas, creating the world, * and logging the main character instance. * Should be called once the DOM is loaded. */ function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
-  console.log("my character is", world.character);
 }
 
 /** * Listens for keydown events and updates the keyboard state accordingly. * Maps arrow keys and spacebar to boolean flags in the Keyboard instance. * @param {KeyboardEvent} event - The keyboard event triggered by user input. */ window.addEventListener(
