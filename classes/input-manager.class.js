@@ -45,7 +45,9 @@ class InputManager {
    */
   registerCanvasClick() {
     this.canvas.addEventListener("click", () => {
-      this.world.soundManager.playMusic();
+      if (this.world.gameStarted) {
+        this.world.soundManager.playMusic();
+      }
     });
   }
 
