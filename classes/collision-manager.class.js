@@ -71,7 +71,7 @@ class CollisionManager {
       !endBoss.isDead &&
       !character.isJumping()
     ) {
-      this.hurtCharacter(); 
+      this.hurtCharacter();
       endBoss.playAlert();
     }
   }
@@ -169,6 +169,21 @@ class CollisionManager {
   }
 
   /**
+   * Creates a temporary expanded bounding box for better collision detection.
+   * @param {Object} obj - The original object to expand (usually the character).
+   * @param {number} margin - Pixels to expand in all directions.
+   * @returns {Object} A new object with expanded dimensions.
+   */
+  expandCollisionBox(obj, margin) {
+    return {
+      x: obj.x - margin,
+      y: obj.y - margin,
+      width: obj.width + 2 * margin,
+      height: obj.height + 2 * margin,
+    };
+  }
+
+  /**
    * Handles collision detection and collection for coins or bottles.
    * @param {Array} collection - The array of collectible items (coins or bottles).
    * @param {string} type - Type of collectible ("coins" or "bottles").
@@ -185,7 +200,7 @@ class CollisionManager {
 
     collection.forEach((item, index) => {
       const collision = useItemCollisionMethod
-        ? item.isColliding(character)
+        ? item.isColliding(this.expandCollisionBox(character, 5))
         : character.isColliding(item);
 
       if (collision) {
