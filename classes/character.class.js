@@ -194,7 +194,7 @@ class Character extends MoveableObject {
 
       if (isStandingStill) {
         this.idleTimer += 300;
-        if (this.idleTimer >= 15000) {
+        if (this.idleTimer >= 8000) {
           this.playAnimation(this.pepe_long_idle);
         } else {
           this.playAnimation(this.pepe_idle);
