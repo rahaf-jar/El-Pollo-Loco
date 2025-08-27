@@ -1,60 +1,58 @@
 /**
- * Represents a small chicken enemy that moves left and can be killed.
- * Extends MoveableObject.
+ * A small chicken enemy that walks left and can be killed.
+ * Extends MoveableObject for animation and movement.
  */
 class SmallChicken extends MoveableObject {
   y = 400;
+
   width = 45;
+
   height = 50;
+
   dead = false;
-  
+
+  animationSpeed = 100;
+
+  lastFrameTime = 0;
+
   small_chicken_walking = [
     "img/3_enemies_chicken/chicken_small/1_walk/1_w.png",
     "img/3_enemies_chicken/chicken_small/1_walk/2_w.png",
     "img/3_enemies_chicken/chicken_small/1_walk/3_w.png",
   ];
 
-  chicken_dead = [
-    "img/3_enemies_chicken/chicken_small/2_dead/dead.png"
-  ];
+  chicken_dead = ["img/3_enemies_chicken/chicken_small/2_dead/dead.png"];
 
   /**
-   * Creates a small chicken enemy at a given horizontal position.
+   * Creates a new SmallChicken at a given horizontal position.
+   * Loads images and assigns random speed.
    * 
-   * @param {number} x - The X coordinate where the chicken is placed.
+   * @param {number} x - The X position where the chicken starts.
    */
   constructor(x) {
     super();
-    this.loadImage("img/3_enemies_chicken/chicken_small/1_walk/1_w.png");
+    this.loadImage(this.small_chicken_walking[0]);
     this.loadImages(this.small_chicken_walking);
     this.loadImages(this.chicken_dead);
     this.x = x;
     this.speed = 0.35 + Math.random() * 2.9;
-    this.animate();
   }
 
   /**
-   * Starts the chicken's movement and animation loop.
+   * Updates the chicken’s position and animation frame.
+   * Moves left if alive and plays correct animation.
    */
-  animate() {
-    this.moveLeft();
-    setInterval(() => {
-      if (this.dead) {
-        this.playAnimation(this.chicken_dead);
-      } else {
+  update() {
+    this.x -= this.speed;
+
+    const now = Date.now();
+    if (!this.dead) {
+      if (now - this.lastFrameTime > this.animationSpeed) {
         this.playAnimation(this.small_chicken_walking);
+        this.lastFrameTime = now;
       }
-    }, 200);
-  }
-
-  /**
-   * Moves the chicken to the left continuously if not dead.
-   */
-  moveLeft() {
-    setInterval(() => {
-      if (!this.dead) {
-        this.x -= this.speed;
-      }
-    }, 1000 / 60);
+    } else {
+      this.playAnimation(this.chicken_dead);
+    }
   }
 }

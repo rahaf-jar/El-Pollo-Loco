@@ -99,6 +99,20 @@ class World {
     this.endGameBackground.src = "img/5_background/second_half_background.png";
   }
 
+  update() {
+    if (!this.gameStarted) return;
+
+    if (this.character.update) this.character.update();
+
+    this.level.enemies.forEach((enemy) => {
+      if (enemy.update) enemy.update();
+    });
+
+    this.thrownBottles.forEach((bottle) => {
+      if (bottle.update) bottle.update();
+    });
+  }
+
   /** Links the character to the world instance */
   setWorld() {
     this.character.world = this;
@@ -240,6 +254,8 @@ class World {
       requestAnimationFrame(() => this.draw());
       return;
     }
+
+    this.update();
 
     if (this.gameEnded) {
       if (this.endGameBackground.complete) {

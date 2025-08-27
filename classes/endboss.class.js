@@ -2,11 +2,14 @@ class Endboss extends MoveableObject {
   width = 350;
   height = 400;
   y = 60;
-  speed = 1.1;
+  speed = 1.3;
 
   isHurt = false;
   isDead = false;
   currentAnimation = null;
+
+  animationSpeed = 150;
+  lastFrameTime = 0;
 
   endboss_walking = [
     "img/4_enemie_boss_chicken/1_walk/G1.png",
@@ -47,31 +50,32 @@ class Endboss extends MoveableObject {
     this.loadImages(this.endboss_hurt);
     this.loadImages(this.endboss_dead);
     this.loadImages(this.endboss_alert);
-
-    this.animate();
   }
 
   /**
-   * Starts the animation loops for movement and switching between animations.
-   * Moves the endboss to the left if it’s not hurt or dead.
-   * Animates walking, hurt, or dead states accordingly.
+   * Updates the endboss’s position and animation based on its state.
+   * Should be called once per frame by the game loop.
    */
-  animate() {
-    setInterval(() => {
-      if (!this.isDead && !this.isHurt) {
-        this.x -= this.speed;
-      }
-    }, 1000 / 60);
+  update() {
+    const now = Date.now();
 
-    setInterval(() => {
-      if (this.isDead) {
-        this.playOnce(this.endboss_dead, "dead");
-      } else if (this.isHurt) {
-        this.playOnce(this.endboss_hurt, "hurt");
-      } else {
+    if (!this.isDead && !this.isHurt) {
+      this.x -= this.speed;
+      if (now - this.lastFrameTime > this.animationSpeed) {
         this.playLoop(this.endboss_walking, "walk");
+        this.lastFrameTime = now;
       }
-    }, 120);
+    } else if (this.isHurt) {
+      if (now - this.lastFrameTime > this.animationSpeed) {
+        this.playOnce(this.endboss_hurt, "hurt");
+        this.lastFrameTime = now;
+      }
+    } else if (this.isDead) {
+      if (now - this.lastFrameTime > this.animationSpeed) {
+        this.playOnce(this.endboss_dead, "dead");
+        this.lastFrameTime = now;
+      }
+    }
   }
 
   /**
@@ -136,20 +140,20 @@ class Endboss extends MoveableObject {
 
   /**
    * Marks the endboss as dead, stops its movement, and plays hurt sound.
-   * After 1 second, removes the endboss from the enemies array in the world.
-   * Prevents multiple kills.
-   * @param {Object} world - The game world object, used to access soundManager and enemies list.
+   * After a delay, removes the endboss from the world and ends the game.
+   * @param {Object} world - The game world object.
    */
   killEndboss(world) {
     if (this.isDead) return;
 
     this.isDead = true;
-    this.isHurt = true;
     this.speed = 0;
     this.currentImage = 0;
     this.currentAnimation = "dead";
     world.soundManager.play("chickenHurt");
-    const animationDuration = this.endboss_dead.length * 400; 
+
+    const animationDuration =
+      this.endboss_dead.length * this.animationSpeed + 600;
 
     setTimeout(() => {
       let i = world.level.enemies.indexOf(this);
