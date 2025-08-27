@@ -33,9 +33,9 @@ class MoveableObject extends DrawAbleObject {
 
     if (this.currentImage >= images.length) {
       if (loop) {
-        this.currentImage = 0; 
+        this.currentImage = 0;
       } else {
-        this.currentImage = images.length - 1; 
+        this.currentImage = images.length - 1;
       }
     }
 

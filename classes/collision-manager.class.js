@@ -91,7 +91,6 @@ class CollisionManager {
    * @param {Object} enemy - The enemy to remove.
    */
   removeEnemy(enemy) {
-    this.world.character.speedY = 15;
     this.killEnemy(enemy);
   }
 
