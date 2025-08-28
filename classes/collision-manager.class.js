@@ -62,17 +62,19 @@ class CollisionManager {
    */
   handleEndbossCollision() {
     const { character, endBoss } = this.world;
-
     if (
       character &&
-      endBoss &&
+      endBoss && 
       character.isColliding(endBoss) &&
       character.canBeHurt &&
       !endBoss.isDead &&
       !character.isJumping()
     ) {
       this.hurtCharacter();
-      endBoss.playAlert();
+
+      if (typeof endBoss.playAlert === "function") {
+        endBoss.playAlert();
+      }
     }
   }
 

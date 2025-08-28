@@ -114,8 +114,12 @@ class World {
 
     if (this.character.update) this.character.update();
 
+    if (this.endBoss instanceof Endboss) {
+      this.endBoss.update(this.character);
+    }
+
     this.level.enemies.forEach((enemy) => {
-      if (enemy.update) enemy.update();
+      if (enemy !== this.endBoss && enemy.update) enemy.update();
     });
 
     this.thrownBottles.forEach((bottle) => {
@@ -351,6 +355,8 @@ class World {
    * @param {DrawableObject} obj - Object to draw
    */
   addToMap(obj) {
+    if (!obj.img) return;
+
     if (obj.otherDirection) {
       this.ctx.save();
       this.ctx.translate(obj.x + obj.width, obj.y);

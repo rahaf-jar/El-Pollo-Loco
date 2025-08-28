@@ -9,7 +9,10 @@ class Endboss extends MoveableObject {
   currentAnimation = null;
 
   animationSpeed = 150;
+  attackSpeed = 200; 
   lastFrameTime = 0;
+  hasAlerted = false;
+  alertCount = 0;
 
   endboss_walking = [
     "img/4_enemie_boss_chicken/1_walk/G1.png",
@@ -41,92 +44,128 @@ class Endboss extends MoveableObject {
     "img/4_enemie_boss_chicken/2_alert/G12.png",
   ];
 
+  endboss_attack = [
+    "img/4_enemie_boss_chicken/3_attack/G13.png",
+    "img/4_enemie_boss_chicken/3_attack/G14.png",
+    "img/4_enemie_boss_chicken/3_attack/G15.png",
+    "img/4_enemie_boss_chicken/3_attack/G16.png",
+    "img/4_enemie_boss_chicken/3_attack/G17.png",
+    "img/4_enemie_boss_chicken/3_attack/G18.png",
+    "img/4_enemie_boss_chicken/3_attack/G19.png",
+    "img/4_enemie_boss_chicken/3_attack/G20.png",
+  ];
+
   constructor() {
     super();
     this.x = 11900;
-
     this.loadImage(this.endboss_walking[0]);
     this.loadImages(this.endboss_walking);
     this.loadImages(this.endboss_hurt);
     this.loadImages(this.endboss_dead);
     this.loadImages(this.endboss_alert);
+    this.loadImages(this.endboss_attack);
   }
 
-  /**
-   * Updates the endboss’s position and animation based on its state.
-   * Should be called once per frame by the game loop.
-   */
-  update() {
-    const now = Date.now();
+  update(character) {
+    const distance = Math.abs(this.x - character.x);
+    if (this.isDead) {
+      this.playOnce(this.endboss_dead, "dead");
+      return;
+    }
 
-    if (!this.isDead && !this.isHurt) {
+    if (this.isHurt) {
+      this.playOnce(this.endboss_hurt, "hurt");
+      return;
+    }
+
+    if (!this.hasAlerted && distance < 700) {
+      if (this.currentAnimation !== "alert") {
+        this.currentAnimation = "alert";
+        this.currentImage = 0;
+        this.lastFrameTime = Date.now();
+        this.alertCount = 0;
+      }
+
+      if (Date.now() - this.lastFrameTime > this.animationSpeed) {
+        this.currentImage++;
+        this.lastFrameTime = Date.now();
+      }
+
+      if (this.currentImage >= this.endboss_alert.length) {
+        this.alertCount++;
+        if (this.alertCount < 2) {
+          this.currentImage = 0;
+        } else {
+          this.hasAlerted = true;
+          this.currentAnimation = null;
+        }
+      }
+
+      const img = this.imageCache[this.endboss_alert[this.currentImage]];
+      if (img) this.img = img;
+      return; 
+    }
+
+    if (distance <= 550) {
+      this.speed = 4.5;
       this.x -= this.speed;
-      if (now - this.lastFrameTime > this.animationSpeed) {
-        this.playLoop(this.endboss_walking, "walk");
-        this.lastFrameTime = now;
-      }
-    } else if (this.isHurt) {
-      if (now - this.lastFrameTime > this.animationSpeed) {
-        this.playOnce(this.endboss_hurt, "hurt");
-        this.lastFrameTime = now;
-      }
-    } else if (this.isDead) {
-      if (now - this.lastFrameTime > this.animationSpeed) {
-        this.playOnce(this.endboss_dead, "dead");
-        this.lastFrameTime = now;
-      }
-    }
-  }
 
-  /**
-   * Plays the given animation images in a loop.
-   * Resets animation if switching to a new animation.
-   * @param {string[]} images - Array of image paths to loop through.
-   * @param {string} name - Name of the animation (used to track current animation).
-   */
-  playLoop(images, name) {
-    if (this.currentAnimation !== name) {
+      if (this.currentAnimation !== "attack") {
+        this.currentAnimation = "attack";
+        this.currentImage = 0;
+        this.lastFrameTime = Date.now();
+      }
+
+      if (Date.now() - this.lastFrameTime > this.attackSpeed) {
+        this.currentImage++;
+        this.lastFrameTime = Date.now();
+      }
+
+      if (this.currentImage >= this.endboss_attack.length) this.currentImage = 0;
+
+      const img = this.imageCache[this.endboss_attack[this.currentImage]];
+      if (img) this.img = img;
+      return;
+    }
+
+    this.speed = 1.3;
+    this.x -= this.speed;
+
+    if (this.currentAnimation !== "walk") {
+      this.currentAnimation = "walk";
       this.currentImage = 0;
-      this.currentAnimation = name;
+      this.lastFrameTime = Date.now();
     }
-    this.playAnimation(images, true);
+
+    if (Date.now() - this.lastFrameTime > this.animationSpeed) {
+      this.currentImage++;
+      this.lastFrameTime = Date.now();
+    }
+
+    if (this.currentImage >= this.endboss_walking.length) this.currentImage = 0;
+
+    const img = this.imageCache[this.endboss_walking[this.currentImage]];
+    if (img) this.img = img;
   }
 
-  /**
-   * Plays the alert animation once.
-   */
-  playAlert() {
-    if (this.isDead || this.isHurt) return;
-
-    this.currentAnimation = "alert";
-    this.currentImage = 0;
-    this.playAnimation(this.endboss_alert, false);
-  }
-
-  /**
-   * Plays the given animation images once (does not loop).
-   * Resets animation if switching to a new animation.
-   * Only advances the animation if not finished.
-   * @param {string[]} images - Array of image paths to play once.
-   * @param {string} name - Name of the animation (used to track current animation).
-   */
   playOnce(images, name) {
     if (this.currentAnimation !== name) {
-      this.currentImage = 0;
       this.currentAnimation = name;
+      this.currentImage = 0;
+      this.lastFrameTime = Date.now();
+    }
+
+    if (Date.now() - this.lastFrameTime > this.animationSpeed) {
+      this.currentImage++;
+      this.lastFrameTime = Date.now();
     }
 
     if (this.currentImage < images.length) {
-      this.playAnimation(images, false);
+      const img = this.imageCache[images[this.currentImage]];
+      if (img) this.img = img;
     }
   }
 
-  /**
-   * Marks the endboss as hurt and plays hurt sound.
-   * Prevents multiple hurt states at the same time.
-   * After 600ms, removes the hurt state.
-   * @param {Object} world - The game world object, used to access soundManager.
-   */
   playHurt(world) {
     if (this.isDead || this.isHurt) return;
 
@@ -138,11 +177,6 @@ class Endboss extends MoveableObject {
     }, 600);
   }
 
-  /**
-   * Marks the endboss as dead, stops its movement, and plays hurt sound.
-   * After a delay, removes the endboss from the world and ends the game.
-   * @param {Object} world - The game world object.
-   */
   killEndboss(world) {
     if (this.isDead) return;
 
@@ -152,14 +186,11 @@ class Endboss extends MoveableObject {
     this.currentAnimation = "dead";
     world.soundManager.play("chickenHurt");
 
-    const animationDuration =
-      this.endboss_dead.length * this.animationSpeed + 600;
+    const animationDuration = this.endboss_dead.length * this.animationSpeed + 600;
 
     setTimeout(() => {
       let i = world.level.enemies.indexOf(this);
-      if (i !== -1) {
-        world.level.enemies.splice(i, 1);
-      }
+      if (i !== -1) world.level.enemies.splice(i, 1);
 
       world.endGame(true);
     }, animationDuration);
