@@ -112,7 +112,9 @@ class World {
   update() {
     if (!this.gameStarted) return;
 
-    if (this.character.update) this.character.update();
+    if (this.character && this.character.update) {
+      this.character.update();
+    }
 
     if (this.endBoss instanceof Endboss) {
       this.endBoss.update(this.character);

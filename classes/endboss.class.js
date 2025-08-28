@@ -9,7 +9,7 @@ class Endboss extends MoveableObject {
   currentAnimation = null;
 
   animationSpeed = 150;
-  attackSpeed = 200; 
+  attackSpeed = 200;
   lastFrameTime = 0;
   hasAlerted = false;
   alertCount = 0;
@@ -67,6 +67,14 @@ class Endboss extends MoveableObject {
   }
 
   update(character) {
+    if (!character) return;
+
+    if (character.x > this.x) {
+      this.x += this.speed;
+    } else {
+      this.x -= this.speed;
+    }
+    
     const distance = Math.abs(this.x - character.x);
     if (this.isDead) {
       this.playOnce(this.endboss_dead, "dead");
@@ -103,7 +111,7 @@ class Endboss extends MoveableObject {
 
       const img = this.imageCache[this.endboss_alert[this.currentImage]];
       if (img) this.img = img;
-      return; 
+      return;
     }
 
     if (distance <= 550) {
@@ -121,7 +129,8 @@ class Endboss extends MoveableObject {
         this.lastFrameTime = Date.now();
       }
 
-      if (this.currentImage >= this.endboss_attack.length) this.currentImage = 0;
+      if (this.currentImage >= this.endboss_attack.length)
+        this.currentImage = 0;
 
       const img = this.imageCache[this.endboss_attack[this.currentImage]];
       if (img) this.img = img;
@@ -186,7 +195,8 @@ class Endboss extends MoveableObject {
     this.currentAnimation = "dead";
     world.soundManager.play("chickenHurt");
 
-    const animationDuration = this.endboss_dead.length * this.animationSpeed + 600;
+    const animationDuration =
+      this.endboss_dead.length * this.animationSpeed + 600;
 
     setTimeout(() => {
       let i = world.level.enemies.indexOf(this);
