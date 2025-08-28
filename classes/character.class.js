@@ -31,7 +31,6 @@ class Character extends MoveableObject {
     "img/2_character_pepe/2_walk/W-26.png",
   ];
 
-  /** Jumping animation image paths */
   pepe_jumping = [
     "img/2_character_pepe/3_jump/J-31.png",
     "img/2_character_pepe/3_jump/J-32.png",
@@ -43,6 +42,7 @@ class Character extends MoveableObject {
     "img/2_character_pepe/3_jump/J-38.png",
     "img/2_character_pepe/3_jump/J-39.png",
   ];
+  jumpFrameIndex = 0;
 
   pepe_idle = [
     "img/2_character_pepe/1_idle/idle/I-1.png",
@@ -155,6 +155,7 @@ class Character extends MoveableObject {
 
       if (this.world.keyboard?.SPACE) {
         this.jump();
+        this.jumpFrameIndex = 0; 
       }
 
       if (this.isAboveGround()) {
@@ -172,7 +173,7 @@ class Character extends MoveableObject {
       if (this.hurtAnimationPlaying) {
         this.playAnimation(this.pepe_hurt);
       } else if (this.isAboveGround()) {
-        this.playAnimation(this.pepe_jumping);
+        this.updateJumpAnimation();
       } else if (
         (this.world?.keyboard?.RIGHT || this.world?.keyboard?.LEFT) &&
         !this.isAboveGround()
@@ -203,5 +204,17 @@ class Character extends MoveableObject {
         this.idleTimer = 0;
       }
     }, 300);
+  }
+
+  updateJumpAnimation() {
+    this.img = this.imageCache[this.pepe_jumping[this.jumpFrameIndex]];
+
+    if (this.jumpFrameIndex < this.pepe_jumping.length - 1) {
+      this.jumpFrameIndex++;
+    }
+    
+    if (!this.isAboveGround()) {
+      this.jumpFrameIndex = 0;
+    }
   }
 }
