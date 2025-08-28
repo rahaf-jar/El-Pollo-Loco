@@ -82,6 +82,16 @@ class World {
     this.uiManager = new UIManager(this, this.ctx);
     this.inputManager = new InputManager(this, canvas, keyboard);
     this.collisionManager = new CollisionManager(this);
+    this.soundManager = new SoundManager();
+
+    const savedMute = localStorage.getItem("isMuted");
+    if (savedMute !== null) {
+      this.isMuted = JSON.parse(savedMute);
+      this.soundManager.muteAll(this.isMuted);
+      this.soundIcon.src = this.isMuted
+        ? "img/on_canvas_options/mute.png"
+        : "img/on_canvas_options/unmute.png";
+    }
 
     this.registerResizeEvent();
     this.setWorld();
@@ -164,6 +174,7 @@ class World {
       ? "img/on_canvas_options/mute.png"
       : "img/on_canvas_options/unmute.png";
     this.soundManager.muteAll(this.isMuted);
+    localStorage.setItem("isMuted", JSON.stringify(this.isMuted));
   }
 
   /** Toggles fullscreen mode on and off */
