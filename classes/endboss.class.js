@@ -57,7 +57,7 @@ class Endboss extends MoveableObject {
 
   constructor() {
     super();
-    this.x = 11900;
+    this.x = 13000;
     this.loadImage(this.endboss_walking[0]);
     this.loadImages(this.endboss_walking);
     this.loadImages(this.endboss_hurt);
@@ -114,8 +114,8 @@ class Endboss extends MoveableObject {
       return;
     }
 
-    if (distance <= 550) {
-      this.speed = 4.5;
+    if (distance <= 850) {
+      this.speed = 5.5;
       this.x -= this.speed;
 
       if (this.currentAnimation !== "attack") {

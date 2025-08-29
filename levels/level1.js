@@ -37,7 +37,7 @@ function generateBottles() {
   const bottles = [];
   const totalBottles = 5;
   const startX = 1000;
-  const spacing = 2000;
+  const spacing = 1500;
 
   for (let i = 0; i < totalBottles; i++) {
     const x = startX + i * spacing;
