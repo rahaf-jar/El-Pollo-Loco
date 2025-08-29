@@ -76,9 +76,13 @@ function toggleOff(overlayId) {
 }
 
 function startGameFromButton() {
-  if (world && typeof world.startGame === 'function') {
+  if (world && typeof world.startGame === "function") {
     world.startGame();
-    document.getElementById('start-button-container').style.display = 'none';
-    document.getElementById('mobile-control-buttons').style.display = 'flex';
+    document.getElementById("start-button-container").style.display = "none";
+    document.getElementById("mobile-control-buttons").style.display = "flex";
   }
 }
+
+document.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+});
