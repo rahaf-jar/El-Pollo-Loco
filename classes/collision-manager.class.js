@@ -1,6 +1,3 @@
-/**
- * Manages all collision detection and response logic in the game world.
- */
 class CollisionManager {
   /**
    * Creates a new CollisionManager linked to the game world.
@@ -17,13 +14,11 @@ class CollisionManager {
   startCollisionChecks() {
     setInterval(() => {
       if (!this.world.character) return;
-
       this.world.level.enemies.forEach((enemy) => {
         if (!(enemy instanceof Endboss)) {
           this.handleEnemyCollision(enemy);
         }
       });
-
       this.handleEndbossCollision();
       this.handleBottleEndbossCollision();
       this.handleCollectablesCollision(
@@ -64,7 +59,7 @@ class CollisionManager {
     const { character, endBoss } = this.world;
     if (
       character &&
-      endBoss && 
+      endBoss &&
       character.isColliding(endBoss) &&
       character.canBeHurt &&
       !endBoss.isDead &&
@@ -149,7 +144,6 @@ class CollisionManager {
    */
   handleBottleEndbossCollision() {
     const { thrownBottles, endBoss, endBossStatusBar } = this.world;
-
     thrownBottles.forEach((bottle, index) => {
       if (bottle.isColliding(endBoss) && !bottle.hasSplashed) {
         bottle.splash();
@@ -193,13 +187,8 @@ class CollisionManager {
    * @param {boolean} useItemCollisionMethod - Whether to call item's isColliding (true for coins).
    */
   handleCollectablesCollision(
-    collection,
-    type,
-    value,
-    useItemCollisionMethod = false
-  ) {
+    collection, type, value, useItemCollisionMethod = false) {
     const { character, coinBar, bottleBar, soundManager } = this.world;
-
     collection.forEach((item, index) => {
       const collision = useItemCollisionMethod
         ? item.isColliding(this.expandCollisionBox(character, 1))
@@ -207,7 +196,6 @@ class CollisionManager {
 
       if (collision) {
         collection.splice(index, 1);
-
         if (type === "coins") {
           coinBar.setCoinsCount(coinBar.coins + value);
           soundManager.play("collectCoin");

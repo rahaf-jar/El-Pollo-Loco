@@ -1,7 +1,3 @@
-/**
- * Represents a collectible bottle item placed on the ground in the game world.
- * Extends DrawAbleObject and is used as part of the player's collectible items.
- */
 class Bottle extends DrawAbleObject {
   /**
    * Creates a new Bottle object at a specific position in the world.

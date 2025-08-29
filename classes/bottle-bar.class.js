@@ -1,7 +1,3 @@
-/**
- * Represents the UI status bar for the player's collected bottles.
- * Extends DrawAbleObject to visually show the number of bottles using images.
- */
 class BottleBar extends DrawAbleObject {
   /**
    * Array of image paths representing the different bottle levels (0 to 5).

@@ -1,25 +1,11 @@
-/**
- * Represents the main player character (Pepe) in the game.
- * Inherits from MoveableObject and handles movement, animation, and state.
- */
 class Character extends MoveableObject {
   height = 270;
-
   width = 130;
-
   y = 70;
-
   speed = 13;
-
-  /** Time the character has been idle (in milliseconds) */
   idleTimer = 0;
-
-  /** Reference to the current World object */
   world;
-
-  /** Timestamp of the last movement, used to detect idling */
   lastMoveTime = Date.now();
-
   isThrowing = false;
 
   pepe_walking = [

@@ -1,26 +1,7 @@
 class MoveableObject extends DrawAbleObject {
-  /**
-   * Speed of horizontal movement (pixels per frame).
-   * @type {number}
-   */
   speed = 0.15;
-
-  /**
-   * Whether the object is facing/moving in the opposite direction.
-   * @type {boolean}
-   */
   otherDirection = false;
-
-  /**
-   * Current vertical speed (for jumping/falling).
-   * @type {number}
-   */
   speedY = 0;
-
-  /**
-   * Gravity acceleration applied each frame.
-   * @type {number}
-   */
   acceleration = 2.5;
 
   /**

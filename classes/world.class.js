@@ -1,15 +1,3 @@
-/**
- * The World class controls the main game loop, drawing, collisions, and interactions
- * between the player, enemies, collectibles, and the environment.
- *
- * Responsibilities:
- * - Draws everything on the canvas
- * - Handles keyboard and mouse input
- * - Manages game state (start, end, reset)
- * - Detects and processes collisions
- * - Plays and manages sounds
- */
-
 class World {
   character = new Character();
   endBoss = null;
@@ -18,47 +6,32 @@ class World {
   ctx;
   keyboard;
   camera_x = 0;
-
   collectedBottles = 0;
-
   thrownBottles = [];
-
   statusBar = new StatusBar();
-
   endBossStatusBar = new EndBossStatusBar();
-
   coinBar = new CoinBar();
-
   bottleBar = new BottleBar();
-
   gameStarted = false;
   gameEnded = false;
-
   soundIcon = new Image();
-
   soundX = 670;
   soundY = 10;
   soundWidth = 20;
   soundHeight = 20;
   isMuted = false;
-
   fullscreenIcon = new Image();
-
   fullscreenX = 670;
   fullscreenY = 450;
   fullscreenWidth = 20;
   fullscreenHeight = 20;
-
   startScreenImage = new Image();
-
   originalWidth;
   originalHeight;
-
   soundManager = new SoundManager();
   collisionManager;
   uiManager;
   inputManager;
-
   /**
    * Creates the game world, initializing the canvas and all managers.
    * @param {HTMLCanvasElement} canvas - The canvas element for rendering.

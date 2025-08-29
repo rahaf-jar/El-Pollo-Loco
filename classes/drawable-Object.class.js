@@ -1,7 +1,3 @@
-/**
- * Base class for drawable objects in the game.
- * Handles image loading and caching for animation frames.
- */
 class DrawAbleObject {
   height = 200;
   width = 100;

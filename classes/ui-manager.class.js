@@ -1,6 +1,3 @@
-/**
- * Manages drawing the User Interface (UI) elements onto the canvas.
- */
 class UIManager {
   /**
    * Creates a UIManager instance.

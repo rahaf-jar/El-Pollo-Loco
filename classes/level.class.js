@@ -1,6 +1,3 @@
-/**
- * Represents a game level containing all objects and parameters.
- */
 class Level {
   enemies;
   clouds;

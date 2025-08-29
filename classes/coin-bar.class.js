@@ -1,7 +1,3 @@
-/**
- * Represents a coin status bar UI element that visually displays the number of coins collected.
- * Extends DrawAbleObject for drawing capabilities.
- */
 class CoinBar extends DrawAbleObject {
   images = [
     "img/7_statusbars/1_statusbar/1_statusbar_coin/green/0.png",

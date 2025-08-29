@@ -3,7 +3,6 @@ class Chicken extends MoveableObject {
   width = 65;
   height = 70;
   dead = false;
-
   animationSpeed = 100; 
   lastFrameTime = 0;
 

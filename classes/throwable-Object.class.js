@@ -1,8 +1,3 @@
-/**
- * Represents a throwable bottle object that can be thrown, rotate mid-air,
- * splash on impact, and is affected by gravity.
- * Extends MoveableObject to inherit position and movement properties.
- */
 class ThrowableBottle extends MoveableObject {
   hasSplashed = false;
   bottle_rotation = [
@@ -64,17 +59,13 @@ class ThrowableBottle extends MoveableObject {
    */
   splash() {
     if (this.hasSplashed) return;
-
     this.hasSplashed = true;
     this.speedX = 0;
     this.speedY = 0;
     this.gravity = 0;
-
     clearInterval(this.rotationInterval);
     clearInterval(this.gravityInterval);
-
     this.playAnimation(this.bottle_splash);
-
     setTimeout(() => {
       if (this.world && this.world.thrownBottles) {
         const index = this.world.thrownBottles.indexOf(this);

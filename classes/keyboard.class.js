@@ -1,7 +1,3 @@
-/**
- * Tracks the current state of keyboard keys relevant to the game.
- * Listens for keydown and keyup events to update key states.
- */
 class Keyboard {
   LEFT;
   RIGHT;

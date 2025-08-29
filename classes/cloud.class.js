@@ -1,7 +1,3 @@
-/**
- * Represents a cloud object that moves slowly across the screen.
- * Extends MoveableObject to inherit movement capabilities.
- */
 class Cloud extends MoveableObject {
   y = 20;
   height = 250;

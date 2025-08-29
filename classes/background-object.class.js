@@ -1,7 +1,3 @@
-/**
- * Represents a background object in the game world, such as scenery or terrain.
- * Inherits from MoveableObject and is used to create a scrolling background.
- */
 class BackgroundObject extends MoveableObject {
   width = 720;
   height = 480;

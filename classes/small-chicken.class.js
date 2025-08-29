@@ -1,20 +1,10 @@
-/**
- * A small chicken enemy that walks left and can be killed.
- * Extends MoveableObject for animation and movement.
- */
 class SmallChicken extends MoveableObject {
   y = 400;
-
   width = 45;
-
   height = 50;
-
   dead = false;
-
   animationSpeed = 100;
-
   lastFrameTime = 0;
-
   small_chicken_walking = [
     "img/3_enemies_chicken/chicken_small/1_walk/1_w.png",
     "img/3_enemies_chicken/chicken_small/1_walk/2_w.png",

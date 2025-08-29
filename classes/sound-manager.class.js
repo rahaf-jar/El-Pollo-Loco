@@ -1,6 +1,3 @@
-/**
- * Manages game sound effects and music playback.
- */
 class SoundManager {
   /**
    * Initializes all sound effects and background music,

@@ -1,7 +1,3 @@
-/**
- * Represents a health/status bar that visually indicates a percentage value.
- * Extends DrawAbleObject to render images representing different health levels.
- */
 class StatusBar extends DrawAbleObject {
   images = [
     "img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png",

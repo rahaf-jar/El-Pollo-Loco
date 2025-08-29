@@ -1,7 +1,3 @@
-/**
- * Manages user input events including keyboard and canvas interactions.
- * Handles game start, bottle throwing, sound/music toggling, and fullscreen control.
- */
 class InputManager {
   /**
    * Creates an InputManager.
@@ -57,26 +53,13 @@ class InputManager {
   registerClickEvent() {
     this.canvas.addEventListener("click", (e) => {
       const { clickX, clickY } = this.getScaledClickCoordinates(e);
-
       if (
-        this.world.isInsideArea(
-          clickX,
-          clickY,
-          this.world.fullscreenX,
-          this.world.fullscreenY,
-          this.world.fullscreenWidth,
-          this.world.fullscreenHeight
+        this.world.isInsideArea(clickX, clickY, this.world.fullscreenX, this.world.fullscreenY, this.world.fullscreenWidth, this.world.fullscreenHeight
         )
       ) {
         this.world.toggleFullscreen();
       } else if (
-        this.world.isInsideArea(
-          clickX,
-          clickY,
-          this.world.soundX,
-          this.world.soundY,
-          this.world.soundWidth,
-          this.world.soundHeight
+        this.world.isInsideArea(clickX, clickY, this.world.soundX, this.world.soundY, this.world.soundWidth, this.world.soundHeight
         )
       ) {
         this.world.toggleSound();
