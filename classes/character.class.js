@@ -92,10 +92,88 @@ class Character extends MoveableObject {
     this.isDead = false;
   }
 
+  /**
+   * Checks if the character's health percentage has dropped to zero or below.
+   * If so, sets the isDead flag to true and ends the game.
+   */
   checkDead() {
     if (!this.isDead && this.percentage <= 0) {
       this.isDead = true;
       this.world.endGame(false);
+    }
+  }
+
+  /** Plays the death animation in a loop.
+   * This function is called when the character is dead.
+   */
+  animateDead() {
+    setInterval(() => this.playAnimation(this.pepe_dead), 100);
+  }
+
+  /** Handles character movement based on keyboard input.
+   * Moves left, right, and jumps. Also updates the camera position.
+   */
+  moveCharacter() {
+    if (!this.world) return;
+    const k = this.world.keyboard;
+    const boss = this.world.endBoss;
+    let isMoving = false;
+
+    if (k?.RIGHT && this.x < this.world.level.level_end_x) {
+      const nearBoss = boss && this.x + this.width + this.speed >= boss.x && this.x < boss.x + boss.width;
+      if (!nearBoss) this.x += this.speed, this.otherDirection = false, isMoving = true;
+    }
+
+    if (k?.LEFT && this.x > -1500) {
+      this.x -= this.speed;
+      this.otherDirection = true;
+      isMoving = true;
+    }
+
+    if (k?.SPACE) this.jump(), this.jumpFrameIndex = 0;
+    if (this.isAboveGround()) isMoving = true;
+    if (isMoving) this.lastMoveTime = Date.now();
+    this.world.camera_x = -this.x + 100;
+  }
+
+
+  /** Updates the character's animation based on its current state.
+   * Prioritizes hurt animation, then jump, then walking, and finally idle or dead.
+   */
+  updateAnimation() {
+    if (this.hurtAnimationPlaying) {
+      this.playAnimation(this.pepe_hurt);
+    } else if (this.isAboveGround()) {
+      this.updateJumpAnimation();
+    } else if (this.world?.keyboard?.RIGHT || this.world?.keyboard?.LEFT) {
+      this.playAnimation(this.pepe_walking);
+    } else if (this.percentage <= 0) {
+      this.playAnimation(this.pepe_dead);
+      this.checkDead();
+    }
+  }
+
+  /** Checks if the character has been idle for a certain duration.
+   * If idle for more than 8 seconds, plays the long idle animation.
+   * Resets the idle timer if the character moves or performs an action.
+   */
+  checkIdle() {
+    const k = this.world?.keyboard;
+    const isStill =
+      !k?.RIGHT &&
+      !k?.LEFT &&
+      !this.isAboveGround() &&
+      !this.hurtAnimationPlaying &&
+      !this.isThrowing;
+    if (isStill) {
+      this.idleTimer += 300;
+      if (this.idleTimer >= 8000) {
+        this.playAnimation(this.pepe_long_idle);
+      } else {
+        this.playAnimation(this.pepe_idle);
+      }
+    } else {
+      this.idleTimer = 0;
     }
   }
 
@@ -107,98 +185,23 @@ class Character extends MoveableObject {
    * - Detecting idle duration to trigger long idle animation
    */
   animate() {
-    if (this.isDead) {
-      setInterval(() => {
-        this.playAnimation(this.pepe_dead);
-      }, 100);
-      return;
-    }
-    setInterval(() => {
-      if (!this.world) return;
-
-      let isMoving = false;
-
-      if (this.world.keyboard?.RIGHT && this.x < this.world.level.level_end_x) {
-        let endBoss = this.world.endBoss;
-
-        let isCloseToEndboss =
-          endBoss &&
-          this.x + this.width + this.speed >= endBoss.x &&
-          this.x < endBoss.x + endBoss.width;
-
-        if (!isCloseToEndboss) {
-          this.x += this.speed;
-          this.otherDirection = false;
-          isMoving = true;
-        }
-      }
-
-      if (this.world.keyboard?.LEFT && this.x > -1500) {
-        this.x -= this.speed;
-        this.otherDirection = true;
-        isMoving = true;
-      }
-
-      if (this.world.keyboard?.SPACE) {
-        this.jump();
-        this.jumpFrameIndex = 0; 
-      }
-
-      if (this.isAboveGround()) {
-        isMoving = true;
-      }
-
-      if (isMoving) {
-        this.lastMoveTime = Date.now();
-      }
-
-      this.world.camera_x = -this.x + 100;
-    }, 1000 / 60);
-
-    setInterval(() => {
-      if (this.hurtAnimationPlaying) {
-        this.playAnimation(this.pepe_hurt);
-      } else if (this.isAboveGround()) {
-        this.updateJumpAnimation();
-      } else if (
-        (this.world?.keyboard?.RIGHT || this.world?.keyboard?.LEFT) &&
-        !this.isAboveGround()
-      ) {
-        this.playAnimation(this.pepe_walking);
-      } else if (this.percentage <= 0) {
-        this.playAnimation(this.pepe_dead);
-        this.checkDead();
-      }
-    }, 100);
-
-    setInterval(() => {
-      const isStandingStill =
-        !this.world?.keyboard?.RIGHT &&
-        !this.world?.keyboard?.LEFT &&
-        !this.isAboveGround() &&
-        !this.hurtAnimationPlaying &&
-        !this.isThrowing;
-
-      if (isStandingStill) {
-        this.idleTimer += 300;
-        if (this.idleTimer >= 8000) {
-          this.playAnimation(this.pepe_long_idle);
-        } else {
-          this.playAnimation(this.pepe_idle);
-        }
-      } else {
-        this.idleTimer = 0;
-      }
-    }, 300);
+    if (this.isDead) return this.animateDead();
+    setInterval(() => this.moveCharacter(), 1000 / 60);
+    setInterval(() => this.updateAnimation(), 100);
+    setInterval(() => this.checkIdle(), 300);
   }
 
+  /**
+   * Updates the jump animation frame based on the current jump frame index.
+   * Resets the jump frame index when the character lands back on the ground.
+   */
   updateJumpAnimation() {
     this.img = this.imageCache[this.pepe_jumping[this.jumpFrameIndex]];
 
     if (this.jumpFrameIndex < this.pepe_jumping.length - 1) {
       this.jumpFrameIndex++;
     }
-    
+
     if (!this.isAboveGround()) {
       this.jumpFrameIndex = 0;
     }
