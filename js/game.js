@@ -1,11 +1,22 @@
+let canvas;
 let world;
 let keyboard = new Keyboard();
 
-/** * Initializes the game by setting up the canvas, creating the world, * and logging the main character instance. * Should be called once the DOM is loaded. */
+/** Initializes the game by setting up the canvas and world objects. */
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
 }
+
+/** * Prevents the context menu from appearing on right-click within the canvas element. * This enhances the gaming experience by avoiding interruptions during gameplay. */
+window.addEventListener("load", () => {
+  const canvasElement = document.querySelector("canvas");
+  if (canvasElement) {
+    canvasElement.addEventListener("contextmenu", function (e) {
+      e.preventDefault();
+    });
+  }
+});
 
 /** * Listens for keydown events and updates the keyboard state accordingly. * Maps arrow keys and spacebar to boolean flags in the Keyboard instance. * @param {KeyboardEvent} event - The keyboard event triggered by user input. */
 window.addEventListener("keydown", (event) => {
@@ -45,6 +56,7 @@ window.addEventListener("keyup", (event) => {
   }
 });
 
+/** Opens the "About the Game" overlay by injecting the relevant HTML template. * Toggles the visibility of the overlay element. */
 function openAboutTheGame() {
   let aboutTheGameRef = document.getElementById("overlay");
   aboutTheGameRef.innerHTML = "";
@@ -52,6 +64,7 @@ function openAboutTheGame() {
   aboutTheGameRef.classList.toggle("d_none");
 }
 
+/** Opens the legal notice overlay by injecting the relevant HTML template. * Toggles the visibility of the overlay element. */
 function openLegalNotice() {
   let aboutTheGameRef = document.getElementById("overlay");
   aboutTheGameRef.innerHTML = "";
@@ -59,6 +72,7 @@ function openLegalNotice() {
   aboutTheGameRef.classList.toggle("d_none");
 }
 
+/** Opens the game menu overlay by injecting the relevant HTML template. * Toggles the visibility of the menu overlay element. */
 function openMenu() {
   let menuRef = document.getElementById("menu_overlay");
   menuRef.innerHTML = "";
@@ -66,11 +80,13 @@ function openMenu() {
   menuRef.classList.toggle("d_none");
 }
 
+/** Toggles the visibility of an overlay element by its ID. * @param {string} overlayId - The ID of the overlay element to toggle. */
 function toggleOff(overlayId) {
   let overlayRef = document.getElementById(overlayId);
   overlayRef.classList.toggle("d_none");
 }
 
+/** Starts the game from the start button, hides the button container, * and shows mobile control buttons if applicable. */
 function startGameFromButton() {
   if (world && typeof world.startGame === "function") {
     world.startGame();
@@ -78,7 +94,3 @@ function startGameFromButton() {
     document.getElementById("mobile-control-buttons").style.display = "flex";
   }
 }
-
-document.addEventListener("contextmenu", function (e) {
-  e.preventDefault();
-});
