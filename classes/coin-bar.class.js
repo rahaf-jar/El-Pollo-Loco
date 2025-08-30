@@ -11,7 +11,7 @@ class CoinBar extends DrawAbleObject {
   coins = 0;
 
   /**
-   * Creates a new CoinBar instance, loads all bar images, and sets default position and size.
+   * Initializes the coin bar, loads images, and sets default values.
    */
   constructor() {
     super();
@@ -24,29 +24,12 @@ class CoinBar extends DrawAbleObject {
   }
 
   /**
-   * Updates the displayed coin count and changes the bar image accordingly.
-   * Clamps the coins value between 0 and 100.
-   *
-   * @param {number} coins - The new coin count to set.
+   * Updates the coin count and sets the appropriate image.
+   * @param {number} coins - New coin count (0 to 100).
    */
   setCoinsCount(coins) {
     this.coins = Math.max(0, Math.min(100, coins));
-    const index = this.resolveImageIndex();
-    const path = this.images[index];
-    this.img = this.imageCache[path];
-  }
-
-  /**
-   * Determines the image index to use based on the current coin count.
-   *
-   * @returns {number} Index in the images array corresponding to the coins count.
-   */
-  resolveImageIndex() {
-    if (this.coins >= 100) return 5;
-    else if (this.coins >= 80) return 4;
-    else if (this.coins >= 60) return 3;
-    else if (this.coins >= 40) return 2;
-    else if (this.coins >= 20) return 1;
-    else return 0;
+    const index = this.resolveImageIndex(this.coins, [0, 20, 40, 60, 80, 100]);
+    this.img = this.imageCache[this.images[index]];
   }
 }

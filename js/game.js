@@ -8,15 +8,10 @@ function init() {
   world = new World(canvas, keyboard);
 }
 
-/** * Prevents the context menu from appearing on right-click within the canvas element. * This enhances the gaming experience by avoiding interruptions during gameplay. */
-window.addEventListener("load", () => {
-  const canvasElement = document.querySelector("canvas");
-  if (canvasElement) {
-    canvasElement.addEventListener("contextmenu", function (e) {
-      e.preventDefault();
-    });
-  }
+document.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
 });
+
 
 /** * Listens for keydown events and updates the keyboard state accordingly. * Maps arrow keys and spacebar to boolean flags in the Keyboard instance. * @param {KeyboardEvent} event - The keyboard event triggered by user input. */
 window.addEventListener("keydown", (event) => {

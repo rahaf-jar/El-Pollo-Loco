@@ -27,4 +27,19 @@ class DrawAbleObject {
       this.imageCache[path] = img;
     });
   }
+
+  /**
+   * Resolves the correct image index based on a value and an array of thresholds.
+   * @param {number} value - The current value (e.g., percentage or count).
+   * @param {number[]} thresholds - An array of threshold values sorted in ascending order.                          Each threshold maps to an index in the image array.
+   * @returns {number} The index in the image array that corresponds to the current value.
+   */
+  resolveImageIndex(value, thresholds) {
+    for (let i = thresholds.length - 1; i >= 0; i--) {
+      if (value >= thresholds[i]) {
+        return i;
+      }
+    }
+    return 0;
+  }
 }
