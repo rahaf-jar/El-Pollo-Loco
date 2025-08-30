@@ -139,7 +139,7 @@ class Endboss extends MoveableObject {
    * Moves the endboss slightly backward while playing the attack animation.
    */
   handleAttackAnimation() {
-    this.speed = 5.5;
+    this.speed = 4.5;
     this.x -= this.speed;
 
     this.initAnimation("attack");
