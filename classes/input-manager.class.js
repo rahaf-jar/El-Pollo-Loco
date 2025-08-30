@@ -27,7 +27,6 @@ class InputManager {
    */
   registerKeyEvents() {
     document.addEventListener("keydown", (e) => {
-      // Start game only if it is not started AND not ended
       if ( e.key.toLowerCase() === "n" && !this.world.gameStarted && !this.world.gameEnded ) {
         this.world.startGame();
       }
