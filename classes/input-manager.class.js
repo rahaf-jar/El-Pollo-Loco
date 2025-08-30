@@ -27,10 +27,11 @@ class InputManager {
    */
   registerKeyEvents() {
     document.addEventListener("keydown", (e) => {
-      if (e.key.toLowerCase() === "n" && !this.world.gameStarted) {
+      // Start game only if it is not started AND not ended
+      if ( e.key.toLowerCase() === "n" && !this.world.gameStarted && !this.world.gameEnded ) {
         this.world.startGame();
       }
-      if (e.key.toLowerCase() === "x" && this.world.gameStarted) {
+      if (e.key.toLowerCase() === "x" &&this.world.gameStarted &&!this.world.gameEnded) {
         this.world.throwBottle();
       }
     });
@@ -54,11 +55,25 @@ class InputManager {
     this.canvas.addEventListener("click", (e) => {
       const { clickX, clickY } = this.getScaledClickCoordinates(e);
       if (
-        this.world.isInsideArea( clickX, clickY, this.world.fullscreenX, this.world.fullscreenY, this.world.fullscreenWidth, this.world.fullscreenHeight )
+        this.world.isInsideArea(
+          clickX,
+          clickY,
+          this.world.fullscreenX,
+          this.world.fullscreenY,
+          this.world.fullscreenWidth,
+          this.world.fullscreenHeight
+        )
       ) {
         this.world.toggleFullscreen();
       } else if (
-        this.world.isInsideArea( clickX, clickY, this.world.soundX, this.world.soundY, this.world.soundWidth, this.world.soundHeight)
+        this.world.isInsideArea(
+          clickX,
+          clickY,
+          this.world.soundX,
+          this.world.soundY,
+          this.world.soundWidth,
+          this.world.soundHeight
+        )
       ) {
         this.world.toggleSound();
       }
