@@ -54,13 +54,11 @@ class InputManager {
     this.canvas.addEventListener("click", (e) => {
       const { clickX, clickY } = this.getScaledClickCoordinates(e);
       if (
-        this.world.isInsideArea(clickX, clickY, this.world.fullscreenX, this.world.fullscreenY, this.world.fullscreenWidth, this.world.fullscreenHeight
-        )
+        this.world.isInsideArea( clickX, clickY, this.world.fullscreenX, this.world.fullscreenY, this.world.fullscreenWidth, this.world.fullscreenHeight )
       ) {
         this.world.toggleFullscreen();
       } else if (
-        this.world.isInsideArea(clickX, clickY, this.world.soundX, this.world.soundY, this.world.soundWidth, this.world.soundHeight
-        )
+        this.world.isInsideArea( clickX, clickY, this.world.soundX, this.world.soundY, this.world.soundWidth, this.world.soundHeight)
       ) {
         this.world.toggleSound();
       }
@@ -81,36 +79,56 @@ class InputManager {
     return { clickX: clickX * scaleX, clickY: clickY * scaleY };
   }
 
+  /**
+   * Registers touch and mouse events for HTML buttons.
+   */
   registerHTMLButtonEvents() {
-    const btnLeft = document.getElementById("btn-left");
-    btnLeft.addEventListener("touchstart", () => (this.keyboard.LEFT = true));
-    btnLeft.addEventListener("touchend", () => (this.keyboard.LEFT = false));
-    btnLeft.addEventListener("mousedown", () => (this.keyboard.LEFT = true));
-    btnLeft.addEventListener("mouseup", () => (this.keyboard.LEFT = false));
-    btnLeft.addEventListener("mouseleave", () => (this.keyboard.LEFT = false));
+    this.handleArrowButton("btn-left", "LEFT");
+    this.handleArrowButton("btn-right", "RIGHT");
+    this.handleJumpButton("btn-jump");
+    this.handleThrowButton("btn-throw");
+  }
 
-    const btnRight = document.getElementById("btn-right");
-    btnRight.addEventListener("touchstart", () => (this.keyboard.RIGHT = true));
-    btnRight.addEventListener("touchend", () => (this.keyboard.RIGHT = false));
-    btnRight.addEventListener("mousedown", () => (this.keyboard.RIGHT = true));
-    btnRight.addEventListener("mouseup", () => (this.keyboard.RIGHT = false));
-    btnRight.addEventListener(
-      "mouseleave",
-      () => (this.keyboard.RIGHT = false)
-    );
+  /**
+   * Handles touch and mouse events for arrow buttons.
+   * @param {string} id - The button element ID.
+   * @param {string} key - The corresponding keyboard key to set.
+   */
+  handleArrowButton(id, key) {
+    const btn = document.getElementById(id);
+    const setKey = (value) => (this.keyboard[key] = value);
 
-    const btnJump = document.getElementById("btn-jump");
-    btnJump.addEventListener("touchstart", () => {
+    btn.addEventListener("touchstart", () => setKey(true));
+    btn.addEventListener("touchend", () => setKey(false));
+    btn.addEventListener("mousedown", () => setKey(true));
+    btn.addEventListener("mouseup", () => setKey(false));
+    btn.addEventListener("mouseleave", () => setKey(false));
+  }
+
+  /**
+   * Handles touch and mouse events for the jump button.
+   * @param {string} id - The button element ID.
+   */
+  handleJumpButton(id) {
+    const btn = document.getElementById(id);
+    const jump = () => {
       this.keyboard.SPACE = true;
       setTimeout(() => (this.keyboard.SPACE = false), 150);
-    });
-    btnJump.addEventListener("mousedown", () => {
-      this.keyboard.SPACE = true;
-      setTimeout(() => (this.keyboard.SPACE = false), 150);
-    });
+    };
 
-    const btnThrow = document.getElementById("btn-throw");
-    btnThrow.addEventListener("touchstart", () => this.world.throwBottle());
-    btnThrow.addEventListener("mousedown", () => this.world.throwBottle());
+    btn.addEventListener("touchstart", jump);
+    btn.addEventListener("mousedown", jump);
+  }
+
+  /**
+   * Handles touch and mouse events for the throw button.
+   * @param {string} id - The button element ID.
+   */
+  handleThrowButton(id) {
+    const btn = document.getElementById(id);
+    const throwAction = () => this.world.throwBottle();
+
+    btn.addEventListener("touchstart", throwAction);
+    btn.addEventListener("mousedown", throwAction);
   }
 }
