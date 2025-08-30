@@ -32,7 +32,7 @@ class World {
   collisionManager;
   uiManager;
   inputManager;
-  
+
   constructor(canvas, keyboard) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
@@ -81,7 +81,8 @@ class World {
   /** Loads images for the end game screen */
   loadEndGameAssets() {
     this.endGameImages = {
-      won: new Image(),lost: new Image(),
+      won: new Image(),
+      lost: new Image(),
     };
     this.endGameImages.won.src = "img/10_You_won_you_lost/You_won_A.png";
     this.endGameImages.lost.src = "img/10_You_won_you_lost/oh_no_you_lost.png";
@@ -240,63 +241,86 @@ class World {
     }
   }
 
-  /** Main game loop: draws the game every frame */
+  /** Main game loop: clears canvas, updates, and draws everything */
   draw() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+    this.clearCanvas();
     if (!this.gameStarted) {
-      this.drawStartScreen();
+      this.showStartScreen();
       requestAnimationFrame(() => this.draw());
       return;
     }
-
     this.update();
-
     if (this.gameEnded) {
-      if (this.endGameBackground.complete) {
-        this.ctx.drawImage(
-          this.endGameBackground,
-          0,
-          0,
-          this.canvas.width,
-          this.canvas.height
-        );
-      }
-      this.ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-      const endImg = this.didWin
-        ? this.endGameImages.won
-        : this.endGameImages.lost;
-
-      if (endImg.complete) {
-        const imgWidth = this.canvas.width / 2;
-        const imgHeight = (endImg.height / endImg.width) * imgWidth;
-        this.ctx.drawImage(
-          endImg,
-          this.canvas.width / 2 - imgWidth / 2,
-          this.canvas.height / 2 - imgHeight / 2,
-          imgWidth,
-          imgHeight
-        );
-      }
-
+      this.showEndScreen();
       return;
     }
+    this.drawGame();
+    this.drawUI();
+    requestAnimationFrame(() => this.draw());
+  }
 
+  /** Clears the entire canvas */
+  clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  /** Displays the start screen image */
+  showStartScreen() {
+    if (this.startScreenImage.complete) {
+      this.ctx.drawImage(
+        this.startScreenImage,
+        0,
+        0,
+        this.canvas.width,
+        this.canvas.height
+      );
+    }
+  }
+
+  /** Displays the end game screen with win/loss message */
+  showEndScreen() {
+    if (this.endGameBackground.complete) {
+      this.ctx.drawImage( this.endGameBackground, 0, 0, this.canvas.width, this.canvas.height
+      );
+    }
+    this.ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    const img = this.didWin ? this.endGameImages.won : this.endGameImages.lost;
+    if (img.complete) {
+      const w = this.canvas.width / 2;
+      const h = (img.height / img.width) * w;
+      this.ctx.drawImage( img, this.canvas.width / 2 - w / 2, this.canvas.height / 2 - h / 2, w, h
+      );
+    }
+  }
+
+  /** Draws the game world with camera translation and scaling */
+  drawGame() {
     this.ctx.save();
     this.ctx.scale(this.scaleX, this.scaleY);
     this.ctx.translate(this.camera_x, 0);
 
-    this.drawGameObjects();
+    this.drawObjects();
 
     this.ctx.translate(-this.camera_x, 0);
-    this.uiManager.drawUI();
-
     this.ctx.restore();
-    this.uiManager.drawIcons();
+  }
 
-    requestAnimationFrame(() => this.draw());
+  /** Draws all game objects in the correct order */
+  drawObjects() {
+    this.addObjectsToMap(this.level.backgroundObjects);
+    if (this.character) this.addToMap(this.character);
+    this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.level.coins);
+    this.addObjectsToMap(this.level.bottles);
+    this.addObjectsToMap(this.thrownBottles);
+  }
+
+  /** Draws the UI elements and icons */
+  drawUI() {
+    this.uiManager.drawUI();
+    this.uiManager.drawIcons();
   }
 
   /** Draws the start screen image */
