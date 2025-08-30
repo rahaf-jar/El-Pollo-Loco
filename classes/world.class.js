@@ -32,71 +32,76 @@ class World {
   collisionManager;
   uiManager;
   inputManager;
-  /**
-   * Creates the game world, initializing the canvas and all managers.
-   * @param {HTMLCanvasElement} canvas - The canvas element for rendering.
-   * @param {Object} keyboard - Object tracking key press states.
-   */
+  
   constructor(canvas, keyboard) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.keyboard = keyboard;
-
-    this.level = createLevel1();
-    this.character = new Character();
-    this.endBoss = this.level.enemies.find((e) => e instanceof Endboss);
-
-    this.originalWidth = canvas.width;
-    this.originalHeight = canvas.height;
-
+    this.setupGameElements();
+    this.storeCanvasSize();
     this.initIcons();
-    this.startScreenImage.src =
-      "img/9_intro_outro_screens/start/startscreen_1.png";
+    this.startScreenImage = new Image();
+    this.startScreenImage.src = "img/9_intro_outro_screens/start/startscreen_1.png";
     this.uiManager = new UIManager(this, this.ctx);
     this.inputManager = new InputManager(this, canvas, keyboard);
     this.collisionManager = new CollisionManager(this);
     this.soundManager = new SoundManager();
+    this.applySavedMute();
+    this.registerResizeEvent();
+    this.setWorld();
+    this.draw();
+    this.loadEndGameAssets();
+  }
 
-    const savedMute = localStorage.getItem("isMuted");
-    if (savedMute !== null) {
-      this.isMuted = JSON.parse(savedMute);
+  /** Sets up the main game elements: level, character, and end boss */
+  setupGameElements() {
+    this.level = createLevel1();
+    this.character = new Character();
+    this.endBoss = this.level.enemies.find((e) => e instanceof Endboss);
+  }
+
+  /** Stores the original canvas size for fullscreen toggling */
+  storeCanvasSize() {
+    this.originalWidth = this.canvas.width;
+    this.originalHeight = this.canvas.height;
+  }
+
+  /** Applies saved mute state from localStorage */
+  applySavedMute() {
+    const saved = localStorage.getItem("isMuted");
+    if (saved !== null) {
+      this.isMuted = JSON.parse(saved);
       this.soundManager.muteAll(this.isMuted);
       this.soundIcon.src = this.isMuted
         ? "img/on_canvas_options/mute.png"
         : "img/on_canvas_options/unmute.png";
     }
+  }
 
-    this.registerResizeEvent();
-    this.setWorld();
-    this.draw();
-
+  /** Loads images for the end game screen */
+  loadEndGameAssets() {
     this.endGameImages = {
-      won: new Image(),
-      lost: new Image(),
+      won: new Image(),lost: new Image(),
     };
     this.endGameImages.won.src = "img/10_You_won_you_lost/You_won_A.png";
     this.endGameImages.lost.src = "img/10_You_won_you_lost/oh_no_you_lost.png";
     this.didWin = false;
-
     this.endGameBackground = new Image();
     this.endGameBackground.src = "img/5_background/second_half_background.png";
   }
 
+  /** Updates all game objects each frame */
   update() {
     if (!this.gameStarted) return;
-
     if (this.character && this.character.update) {
       this.character.update();
     }
-
     if (this.endBoss instanceof Endboss) {
       this.endBoss.update(this.character);
     }
-
     this.level.enemies.forEach((enemy) => {
       if (enemy !== this.endBoss && enemy.update) enemy.update();
     });
-
     this.thrownBottles.forEach((bottle) => {
       if (bottle.update) bottle.update();
     });
@@ -217,7 +222,7 @@ class World {
     );
   }
 
-  /** Throws a bottle if the player has any */
+  /** Throws a bottle if available and updates the bottle bar */
   throwBottle() {
     if (this.collectedBottles > 0 && !this.character.isDead) {
       this.character.isThrowing = true;
