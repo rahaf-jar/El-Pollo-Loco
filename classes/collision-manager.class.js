@@ -191,7 +191,7 @@ class CollisionManager {
     const { character, coinBar, bottleBar, soundManager } = this.world;
     collection.forEach((item, index) => {
       const collision = useItemCollisionMethod
-        ? item.isColliding(this.expandCollisionBox(character, 1))
+        ? item.isColliding(this.expandCollisionBox(character, -1))
         : character.isColliding(item);
 
       if (collision) {
