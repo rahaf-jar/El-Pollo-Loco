@@ -52,6 +52,7 @@ class World {
     this.setWorld();
     this.draw();
     this.loadEndGameAssets();
+    this.animationFrameId = null;
   }
 
   /** Sets up the main game elements: level, character, and end boss */
@@ -133,24 +134,24 @@ class World {
 
   /** Ends the game and displays the "Game Over" screen */
   endGame(won) {
-    if (this.gameEnded) return; 
+    if (this.gameEnded) return;
 
     this.gameEnded = true;
     this.didWin = won;
-    this.soundManager.stopMusic(); 
+    this.soundManager.stopMusic();
 
     if (this.character) this.character.isDead = true;
     if (this.endBoss) this.endBoss.isDead = true;
 
     setTimeout(() => {
       this.resetGame();
-    }, 2000); 
+    }, 2000);
   }
 
-  /** Resets the game by creating a new world instance */
+  /** Resets the game to its initial state */
   resetGame() {
-    this.inputManager.removeEvents(); 
-    world = new World(this.canvas, this.keyboard); 
+    this.cleanup(); 
+    world = new World(this.canvas, this.keyboard);
   }
 
   /** Checks if all assets (coins, bottles) are loaded */
@@ -253,17 +254,31 @@ class World {
     this.clearCanvas();
     if (!this.gameStarted) {
       this.showStartScreen();
-      requestAnimationFrame(() => this.draw());
+      this.animationFrameId = requestAnimationFrame(() => this.draw());
       return;
     }
     this.update();
     if (this.gameEnded) {
       this.showEndScreen();
-      return;
+      return; 
     }
+
     this.drawGame();
     this.drawUI();
-    requestAnimationFrame(() => this.draw());
+
+    this.animationFrameId = requestAnimationFrame(() => this.draw());
+  }
+
+  cleanup() {
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
+    this.soundManager.stopMusic();
+    this.soundManager.muteAll(true);
+    if (this.inputManager) {
+      this.inputManager.removeEvents();
+    }
   }
 
   /** Clears the entire canvas */
