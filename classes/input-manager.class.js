@@ -9,8 +9,30 @@ class InputManager {
     this.world = world;
     this.canvas = canvas;
     this.keyboard = keyboard;
+    this.keydownHandler = this.handleKeyDown.bind(this); 
     this.registerEvents();
     this.registerHTMLButtonEvents();
+  }
+
+  removeEvents() {
+    document.removeEventListener("keydown", this.keydownHandler);
+  }
+
+  handleKeyDown(e) {
+    if (
+      e.key.toLowerCase() === "n" &&
+      !this.world.gameStarted &&
+      !this.world.gameEnded
+    ) {
+      this.world.startGame();
+    }
+    if (
+      e.key.toLowerCase() === "x" &&
+      this.world.gameStarted &&
+      !this.world.gameEnded
+    ) {
+      this.world.throwBottle();
+    }
   }
 
   /**
@@ -26,14 +48,7 @@ class InputManager {
    * Registers keyboard events to start game and throw bottles.
    */
   registerKeyEvents() {
-    document.addEventListener("keydown", (e) => {
-      if ( e.key.toLowerCase() === "n" && !this.world.gameStarted && !this.world.gameEnded ) {
-        this.world.startGame();
-      }
-      if (e.key.toLowerCase() === "x" &&this.world.gameStarted &&!this.world.gameEnded) {
-        this.world.throwBottle();
-      }
-    });
+    document.addEventListener("keydown", this.keydownHandler);
   }
 
   /**

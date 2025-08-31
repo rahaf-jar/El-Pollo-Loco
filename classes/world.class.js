@@ -41,7 +41,8 @@ class World {
     this.storeCanvasSize();
     this.initIcons();
     this.startScreenImage = new Image();
-    this.startScreenImage.src = "img/9_intro_outro_screens/start/startscreen_1.png";
+    this.startScreenImage.src =
+      "img/9_intro_outro_screens/start/startscreen_1.png";
     this.uiManager = new UIManager(this, this.ctx);
     this.inputManager = new InputManager(this, canvas, keyboard);
     this.collisionManager = new CollisionManager(this);
@@ -121,6 +122,8 @@ class World {
 
   /** Starts the game: sets up the world, starts collisions, and plays music */
   startGame() {
+    if (this.gameStarted || this.gameEnded) return;
+
     this.setWorld();
     this.checkAssets();
     this.collisionManager.startCollisionChecks();
@@ -130,20 +133,24 @@ class World {
 
   /** Ends the game and displays the "Game Over" screen */
   endGame(won) {
+    if (this.gameEnded) return; 
+
     this.gameEnded = true;
     this.didWin = won;
-    this.soundManager.stopMusic();
+    this.soundManager.stopMusic(); 
 
     if (this.character) this.character.isDead = true;
     if (this.endBoss) this.endBoss.isDead = true;
+
     setTimeout(() => {
       this.resetGame();
-    }, 3000);
+    }, 2000); 
   }
 
   /** Resets the game by creating a new world instance */
   resetGame() {
-    world = new World(this.canvas, this.keyboard);
+    this.inputManager.removeEvents(); 
+    world = new World(this.canvas, this.keyboard); 
   }
 
   /** Checks if all assets (coins, bottles) are loaded */
@@ -280,7 +287,12 @@ class World {
   /** Displays the end game screen with win/loss message */
   showEndScreen() {
     if (this.endGameBackground.complete) {
-      this.ctx.drawImage( this.endGameBackground, 0, 0, this.canvas.width, this.canvas.height
+      this.ctx.drawImage(
+        this.endGameBackground,
+        0,
+        0,
+        this.canvas.width,
+        this.canvas.height
       );
     }
     this.ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
@@ -290,7 +302,12 @@ class World {
     if (img.complete) {
       const w = this.canvas.width / 2;
       const h = (img.height / img.width) * w;
-      this.ctx.drawImage( img, this.canvas.width / 2 - w / 2, this.canvas.height / 2 - h / 2, w, h
+      this.ctx.drawImage(
+        img,
+        this.canvas.width / 2 - w / 2,
+        this.canvas.height / 2 - h / 2,
+        w,
+        h
       );
     }
   }
@@ -321,29 +338,6 @@ class World {
   drawUI() {
     this.uiManager.drawUI();
     this.uiManager.drawIcons();
-  }
-
-  /** Draws the start screen image */
-  drawStartScreen() {
-    if (this.startScreenImage.complete) {
-      this.ctx.drawImage(
-        this.startScreenImage,
-        0,
-        0,
-        this.canvas.width,
-        this.canvas.height
-      );
-    }
-  }
-
-  /** Draws background and game objects */
-  drawGameObjects() {
-    this.addObjectsToMap(this.level.backgroundObjects);
-    if (this.character) this.addToMap(this.character);
-    this.addObjectsToMap(this.level.enemies);
-    this.addObjectsToMap(this.level.coins);
-    this.addObjectsToMap(this.level.bottles);
-    this.addObjectsToMap(this.thrownBottles);
   }
 
   /**
