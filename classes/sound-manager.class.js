@@ -12,10 +12,10 @@ class SoundManager {
       gameMusic: new Audio("audio/game-music.mp3"),
     };
     this.sounds.gameMusic.loop = true;
-    this.sounds.gameMusic.volume = 0.5;
+    this.sounds.gameMusic.volume = 0.1;
     for (let key in this.sounds) {
       if (key !== "gameMusic") {
-        this.sounds[key].volume = 0.5;
+        this.sounds[key].volume = 0.1;
       }
     }
   }
