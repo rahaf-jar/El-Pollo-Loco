@@ -18,6 +18,21 @@
     overflow-x: hidden;
 }
 
+.user-instructions button {
+    border: none;
+    background-color: hsla(0, 0%, 0%, 0.5);
+    color: hsl(43, 90%, 45%);
+    border: 1.5px solid hsla(43, 96%, 37%, 0.915);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px;
+    box-shadow: 0 5px 30px hsla(0, 0%, 0%, 0.6);
+    cursor: pointer;
+    z-index: 1900;
+}
+
 .game-explaination-text {
     color: hsl(0, 0%, 33%);
     line-height: 1.5;

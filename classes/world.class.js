@@ -133,6 +133,7 @@ class World {
   }
 
   /** Ends the game and displays the "Game Over" screen */
+  /** Ends the game and displays the "Game Over" screen */
   endGame(won) {
     if (this.gameEnded) return;
 
@@ -142,15 +143,12 @@ class World {
 
     if (this.character) this.character.isDead = true;
     if (this.endBoss) this.endBoss.isDead = true;
-
-    setTimeout(() => {
-      this.resetGame();
-    }, 2000);
+    toggleInstructions(true);
   }
 
   /** Resets the game to its initial state */
   resetGame() {
-    this.cleanup(); 
+    this.cleanup();
     world = new World(this.canvas, this.keyboard);
   }
 
@@ -260,7 +258,7 @@ class World {
     this.update();
     if (this.gameEnded) {
       this.showEndScreen();
-      return; 
+      return;
     }
 
     this.drawGame();
@@ -325,6 +323,7 @@ class World {
         h
       );
     }
+    toggleInstructions(true);
   }
 
   /** Draws the game world with camera translation and scaling */

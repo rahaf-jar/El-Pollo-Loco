@@ -8,10 +8,45 @@ function init() {
   world = new World(canvas, keyboard);
 }
 
+function restartGame() {
+  if (world) {
+    world.cleanup();
+  }
+  toggleInstructions(false);
+  world = new World(canvas, keyboard);
+  world.startGame();
+}
+
+function backToStartScreen() {
+  if (world) {
+    world.cleanup();
+    document.getElementById("start-button-container").style.display = "block";
+    document.getElementById("mobile-control-buttons").style.display = "none";
+    document.getElementById("overlay").classList.add("d_none");
+    document.getElementById("menu_overlay").classList.add("d_none");
+
+    canvas = document.getElementById("canvas");
+    world = new World(canvas, keyboard);
+  }
+  toggleInstructions(false);
+}
+
+function toggleInstructions(endScreenActive) {
+  const normal = document.getElementById("normal-instructions");
+  const endgame = document.getElementById("endgame-instructions");
+
+  if (endScreenActive) {
+    normal.style.display = "none";
+    endgame.style.display = "flex";
+  } else {
+    normal.style.display = "flex";
+    endgame.style.display = "none";
+  }
+}
+
 document.addEventListener("contextmenu", function (e) {
   e.preventDefault();
 });
-
 
 /** * Listens for keydown events and updates the keyboard state accordingly. * Maps arrow keys and spacebar to boolean flags in the Keyboard instance. * @param {KeyboardEvent} event - The keyboard event triggered by user input. */
 window.addEventListener("keydown", (event) => {

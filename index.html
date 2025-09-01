@@ -95,16 +95,22 @@
       </div>
     </div>
 
-    <div class="user-instructions">
-      <div class="sub-instructions">
-        <p>Press 'N' to start</p>
-        <p>Press 'X' to throw bottle</p>
-      </div>
-      <div class="sub-instructions">
-        <p>Press 'SPACE' to jump</p>
-        <p>Press 'arrow left / right' to move</p>
-      </div>
-    </div>
+<div class="user-instructions" id="normal-instructions">
+  <div class="sub-instructions">
+    <p>Press 'N' to start</p>
+    <p>Press 'X' to throw bottle</p>
+  </div>
+  <div class="sub-instructions">
+    <p>Press 'SPACE' to jump</p>
+    <p>Press 'arrow left / right' to move</p>
+  </div>
+</div>
+
+<div class="user-instructions" id="endgame-instructions" style="display: none;">
+  <button onclick="backToStartScreen()" class="sub-instructions">Back to Startscreen</button>
+  <button onclick="restartGame()" class="sub-instructions">Restart</button>
+</div>
+
     <div onclick="toggleOff('overlay')" class="d_none" id="overlay"></div>
 
     <div
