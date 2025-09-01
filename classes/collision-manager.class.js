@@ -187,24 +187,54 @@ class CollisionManager {
    * @param {boolean} useItemCollisionMethod - Whether to call item's isColliding (true for coins).
    */
   handleCollectablesCollision(
-    collection, type, value, useItemCollisionMethod = false) {
-    const { character, coinBar, bottleBar, soundManager } = this.world;
-    collection.forEach((item, index) => {
-      const collision = useItemCollisionMethod
-        ? item.isColliding(this.expandCollisionBox(character, -1))
-        : character.isColliding(item);
+    collection,
+    type,
+    value,
+    useItemCollisionMethod = false
+  ) {
+    const { character } = this.world;
 
-      if (collision) {
-        collection.splice(index, 1);
-        if (type === "coins") {
-          coinBar.setCoinsCount(coinBar.coins + value);
-          soundManager.play("collectCoin");
-        } else if (type === "bottles") {
-          this.world.collectedBottles++;
-          bottleBar.setBottlesAmount(this.world.collectedBottles);
-        }
-      }
+    collection.forEach((item, index) => {
+      const collision = this.isCollidingWithItem(
+        character,
+        item,
+        type,
+        useItemCollisionMethod
+      );
+      if (collision) this.collectItem(item, collection, index, type, value);
     });
+  }
+
+  isCollidingWithItem(character, item, type, useItemCollisionMethod) {
+    if (type === "coins") return this.checkCoinCollision(character, item);
+    return useItemCollisionMethod
+      ? item.isColliding(this.expandCollisionBox(character, -15))
+      : character.isColliding(item);
+  }
+
+  checkCoinCollision(character, coin) {
+    const charBox = this.expandCollisionBox(character, 0);
+    const overlapX =
+      Math.min(charBox.x + charBox.width, coin.x + coin.width) -
+      Math.max(charBox.x, coin.x);
+    const overlapY =
+      Math.min(charBox.y + charBox.height, coin.y + coin.height) -
+      Math.max(charBox.y, coin.y);
+    const coinBelowHead = coin.y + coin.height > charBox.y + charBox.height / 2; 
+    return overlapX >= charBox.width / 2 && overlapY > 0 && coinBelowHead;
+  }
+
+  collectItem(item, collection, index, type, value) {
+    const { coinBar, bottleBar, soundManager } = this.world;
+    collection.splice(index, 1);
+
+    if (type === "coins") {
+      coinBar.setCoinsCount(coinBar.coins + value);
+      soundManager.play("collectCoin");
+    } else if (type === "bottles") {
+      this.world.collectedBottles++;
+      bottleBar.setBottlesAmount(this.world.collectedBottles);
+    }
   }
 
   /**
