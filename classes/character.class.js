@@ -7,6 +7,7 @@ class Character extends MoveableObject {
   world;
   lastMoveTime = Date.now();
   isThrowing = false;
+  isJumpingFlag = false;
 
   pepe_walking = [
     "img/2_character_pepe/2_walk/W-21.png",
@@ -120,8 +121,14 @@ class Character extends MoveableObject {
     let isMoving = false;
 
     if (k?.RIGHT && this.x < this.world.level.level_end_x) {
-      const nearBoss = boss && this.x + this.width + this.speed >= boss.x && this.x < boss.x + boss.width;
-      if (!nearBoss) this.x += this.speed, this.otherDirection = false, isMoving = true;
+      const nearBoss =
+        boss &&
+        this.x + this.width + this.speed >= boss.x &&
+        this.x < boss.x + boss.width;
+      if (!nearBoss)
+        (this.x += this.speed),
+          (this.otherDirection = false),
+          (isMoving = true);
     }
 
     if (k?.LEFT && this.x > -1500) {
@@ -130,12 +137,16 @@ class Character extends MoveableObject {
       isMoving = true;
     }
 
-    if (k?.SPACE) this.jump(), this.jumpFrameIndex = 0;
+    if (k?.SPACE && !this.isAboveGround()) {
+      this.jump();
+      this.jumpFrameIndex = 0;
+      this.isJumpingFlag = true;
+    }
+
     if (this.isAboveGround()) isMoving = true;
     if (isMoving) this.lastMoveTime = Date.now();
     this.world.camera_x = -this.x + 100;
   }
-
 
   /** Updates the character's animation based on its current state.
    * Prioritizes hurt animation, then jump, then walking, and finally idle or dead.
@@ -143,7 +154,7 @@ class Character extends MoveableObject {
   updateAnimation() {
     if (this.hurtAnimationPlaying) {
       this.playAnimation(this.pepe_hurt);
-    } else if (this.isAboveGround()) {
+    } else if (this.isJumpingFlag) {
       this.updateJumpAnimation();
     } else if (this.world?.keyboard?.RIGHT || this.world?.keyboard?.LEFT) {
       this.playAnimation(this.pepe_walking);
@@ -162,9 +173,10 @@ class Character extends MoveableObject {
     const isStill =
       !k?.RIGHT &&
       !k?.LEFT &&
-      !this.isAboveGround() &&
+      !this.isJumpingFlag &&
       !this.hurtAnimationPlaying &&
       !this.isThrowing;
+
     if (isStill) {
       this.idleTimer += 300;
       if (this.idleTimer >= 8000) {
@@ -204,6 +216,7 @@ class Character extends MoveableObject {
 
     if (!this.isAboveGround()) {
       this.jumpFrameIndex = 0;
+      this.isJumpingFlag = false;
     }
   }
 }
