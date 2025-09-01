@@ -2,7 +2,7 @@ class Character extends MoveableObject {
   height = 270;
   width = 130;
   y = 70;
-  speed = 13;
+  speed = 11;
   idleTimer = 0;
   world;
   lastMoveTime = Date.now();
@@ -17,19 +17,24 @@ class Character extends MoveableObject {
     "img/2_character_pepe/2_walk/W-25.png",
     "img/2_character_pepe/2_walk/W-26.png",
   ];
+  walkFrameCounter = 0;
 
-  pepe_jumping = [
+  pepe_starting_to_jump = [
     "img/2_character_pepe/3_jump/J-31.png",
     "img/2_character_pepe/3_jump/J-32.png",
     "img/2_character_pepe/3_jump/J-33.png",
-    "img/2_character_pepe/3_jump/J-34.png",
+  ];
+
+  pepe_jumping = ["img/2_character_pepe/3_jump/J-34.png"];
+
+  pepe_falling = [
     "img/2_character_pepe/3_jump/J-35.png",
     "img/2_character_pepe/3_jump/J-36.png",
     "img/2_character_pepe/3_jump/J-37.png",
     "img/2_character_pepe/3_jump/J-38.png",
     "img/2_character_pepe/3_jump/J-39.png",
   ];
-  jumpFrameIndex = 0;
+  fallFrameCounter = 0;
 
   pepe_idle = [
     "img/2_character_pepe/1_idle/idle/I-1.png",
@@ -73,15 +78,14 @@ class Character extends MoveableObject {
     "img/2_character_pepe/5_dead/D-57.png",
   ];
 
-  /**
-   * Creates a new Character instance, loads all animations and sets up behavior.
-   */
   constructor() {
     super();
     this.loadImage("img/2_character_pepe/2_walk/W-21.png");
     this.loadImages(this.pepe_idle);
     this.loadImages(this.pepe_walking);
+    this.loadImages(this.pepe_starting_to_jump);
     this.loadImages(this.pepe_jumping);
+    this.loadImages(this.pepe_falling);
     this.loadImages(this.pepe_long_idle);
     this.loadImages(this.pepe_hurt);
     this.loadImages(this.pepe_dead);
@@ -93,10 +97,6 @@ class Character extends MoveableObject {
     this.isDead = false;
   }
 
-  /**
-   * Checks if the character's health percentage has dropped to zero or below.
-   * If so, sets the isDead flag to true and ends the game.
-   */
   checkDead() {
     if (!this.isDead && this.percentage <= 0) {
       this.isDead = true;
@@ -104,70 +104,46 @@ class Character extends MoveableObject {
     }
   }
 
-  /** Plays the death animation in a loop.
-   * This function is called when the character is dead.
-   */
   animateDead() {
     setInterval(() => this.playAnimation(this.pepe_dead), 100);
   }
 
-  /** Handles character movement based on keyboard input.
-   * Moves left, right, and jumps. Also updates the camera position.
-   */
   moveCharacter() {
     if (!this.world) return;
     const k = this.world.keyboard;
     const boss = this.world.endBoss;
     let isMoving = false;
-
     if (k?.RIGHT && this.x < this.world.level.level_end_x) {
-      const nearBoss =
-        boss &&
-        this.x + this.width + this.speed >= boss.x &&
-        this.x < boss.x + boss.width;
-      if (!nearBoss)
-        (this.x += this.speed),
-          (this.otherDirection = false),
-          (isMoving = true);
+      const nearBoss = boss && this.x + this.width + this.speed >= boss.x && this.x < boss.x + boss.width;
+      if (!nearBoss) {
+        this.x += this.speed; this.otherDirection = false; isMoving = true;
+      }
     }
-
     if (k?.LEFT && this.x > -1500) {
-      this.x -= this.speed;
-      this.otherDirection = true;
-      isMoving = true;
+      this.x -= this.speed; this.otherDirection = true; isMoving = true;
     }
-
     if (k?.SPACE && !this.isAboveGround()) {
-      this.jump();
-      this.jumpFrameIndex = 0;
-      this.isJumpingFlag = true;
+      this.jump(); this.isJumpingFlag = true; this.playAnimation(this.pepe_starting_to_jump, false);
     }
-
-    if (this.isAboveGround()) isMoving = true;
-    if (isMoving) this.lastMoveTime = Date.now();
-    this.world.camera_x = -this.x + 100;
+    if (this.isAboveGround()) isMoving = true; if (isMoving) this.lastMoveTime = Date.now(); this.world.camera_x = -this.x + 100;
   }
 
-  /** Updates the character's animation based on its current state.
-   * Prioritizes hurt animation, then jump, then walking, and finally idle or dead.
-   */
   updateAnimation() {
     if (this.hurtAnimationPlaying) {
       this.playAnimation(this.pepe_hurt);
     } else if (this.isJumpingFlag) {
       this.updateJumpAnimation();
     } else if (this.world?.keyboard?.RIGHT || this.world?.keyboard?.LEFT) {
-      this.playAnimation(this.pepe_walking);
+      this.walkFrameCounter++;
+      if (this.walkFrameCounter % 2 === 0) {
+        this.playAnimation(this.pepe_walking);
+      }
     } else if (this.percentage <= 0) {
       this.playAnimation(this.pepe_dead);
       this.checkDead();
     }
   }
 
-  /** Checks if the character has been idle for a certain duration.
-   * If idle for more than 8 seconds, plays the long idle animation.
-   * Resets the idle timer if the character moves or performs an action.
-   */
   checkIdle() {
     const k = this.world?.keyboard;
     const isStill =
@@ -189,34 +165,27 @@ class Character extends MoveableObject {
     }
   }
 
-  /**
-   * Handles the animation and movement logic of the character.
-   * Includes:
-   * - Movement (left/right/jump)
-   * - Switching animation states (walking, jumping, idle, hurt, dead)
-   * - Detecting idle duration to trigger long idle animation
-   */
   animate() {
     if (this.isDead) return this.animateDead();
     setInterval(() => this.moveCharacter(), 1000 / 60);
-    setInterval(() => this.updateAnimation(), 100);
+    setInterval(() => this.updateAnimation(), 1000 / 30);
     setInterval(() => this.checkIdle(), 300);
   }
 
-  /**
-   * Updates the jump animation frame based on the current jump frame index.
-   * Resets the jump frame index when the character lands back on the ground.
-   */
   updateJumpAnimation() {
-    this.img = this.imageCache[this.pepe_jumping[this.jumpFrameIndex]];
-
-    if (this.jumpFrameIndex < this.pepe_jumping.length - 1) {
-      this.jumpFrameIndex++;
+    if (this.speedY > 30) {
+      this.playAnimation(this.pepe_starting_to_jump, false);
+    } else if (this.speedY > 0) {
+      this.playAnimation(this.pepe_jumping, false);
+    } else if (this.speedY < 0) {
+      this.fallFrameCounter++;
+      if (this.fallFrameCounter % 5 === 0) {
+        this.playAnimation(this.pepe_falling);
+      }
     }
-
-    if (!this.isAboveGround()) {
-      this.jumpFrameIndex = 0;
+    if (!this.isAboveGround() && this.speedY === 0) {
       this.isJumpingFlag = false;
+      this.fallFrameCounter = 0;
     }
   }
 }
