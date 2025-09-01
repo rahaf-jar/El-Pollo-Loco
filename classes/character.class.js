@@ -35,6 +35,8 @@ class Character extends MoveableObject {
     "img/2_character_pepe/3_jump/J-39.png",
   ];
   fallFrameCounter = 0;
+  hurtFrameCounter = 0;
+  deadFrameCounter = 0;
 
   pepe_idle = [
     "img/2_character_pepe/1_idle/idle/I-1.png",
@@ -104,33 +106,43 @@ class Character extends MoveableObject {
     }
   }
 
-  animateDead() {
-    setInterval(() => this.playAnimation(this.pepe_dead), 100);
-  }
-
   moveCharacter() {
     if (!this.world) return;
     const k = this.world.keyboard;
     const boss = this.world.endBoss;
     let isMoving = false;
     if (k?.RIGHT && this.x < this.world.level.level_end_x) {
-      const nearBoss = boss && this.x + this.width + this.speed >= boss.x && this.x < boss.x + boss.width;
+      const nearBoss =
+        boss &&
+        this.x + this.width + this.speed >= boss.x &&
+        this.x < boss.x + boss.width;
       if (!nearBoss) {
-        this.x += this.speed; this.otherDirection = false; isMoving = true;
+        this.x += this.speed;
+        this.otherDirection = false;
+        isMoving = true;
       }
     }
     if (k?.LEFT && this.x > -1500) {
-      this.x -= this.speed; this.otherDirection = true; isMoving = true;
+      this.x -= this.speed;
+      this.otherDirection = true;
+      isMoving = true;
     }
     if (k?.SPACE && !this.isAboveGround()) {
-      this.jump(); this.isJumpingFlag = true; this.playAnimation(this.pepe_starting_to_jump, false);
+      this.jump();
+      this.isJumpingFlag = true;
+      this.playAnimation(this.pepe_starting_to_jump, false);
     }
-    if (this.isAboveGround()) isMoving = true; if (isMoving) this.lastMoveTime = Date.now(); this.world.camera_x = -this.x + 100;
+    if (this.isAboveGround()) isMoving = true;
+    if (isMoving) this.lastMoveTime = Date.now();
+    this.world.camera_x = -this.x + 100;
   }
 
   updateAnimation() {
     if (this.hurtAnimationPlaying) {
-      this.playAnimation(this.pepe_hurt);
+      this.hurtFrameCounter++;
+      if (this.hurtFrameCounter % 3 === 0) {
+        this.playAnimation(this.pepe_hurt);
+      }
     } else if (this.isJumpingFlag) {
       this.updateJumpAnimation();
     } else if (this.world?.keyboard?.RIGHT || this.world?.keyboard?.LEFT) {
@@ -139,7 +151,10 @@ class Character extends MoveableObject {
         this.playAnimation(this.pepe_walking);
       }
     } else if (this.percentage <= 0) {
-      this.playAnimation(this.pepe_dead);
+      this.deadFrameCounter++;
+      if (this.deadFrameCounter % 3 === 0) {
+        this.playAnimation(this.pepe_dead);
+      }
       this.checkDead();
     }
   }
